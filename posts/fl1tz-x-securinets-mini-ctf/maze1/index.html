@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-dIZvJ8DqW/1X4y0O6aI5UPABQELt1l2BTHohK5HWvVE=' 'sha256-9HHnGVC497OjgOFzxn/+mDm2PxMkGmqK0aKJxMa9a48='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maze1</title>
+  <meta name="description" content="A lost expeditioner.">
+  <meta property="og:title" content="Adem Kefi">
+  <meta property="og:description" content="A lost expeditioner.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <script>
+    // Apply the saved theme before first paint, and start fetching that theme's main font right away.
+    // IDA Dark is the default (IDA's two tones share data-theme="ida"); "ember" (older visits stored "ida_dark") is Ember & Ash, which has no data-theme.
+    var t = "ida", tone = "dark";
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "ember" || saved === "ida_dark") { t = "ember"; tone = ""; }
+      else if (saved === "deco" || saved === "e33" || saved === "ghidra" || saved === "binja") { t = saved; tone = ""; }
+      else if (saved === "ida") tone = "";
+    } catch (e) {}
+    if (t !== "ember") document.documentElement.setAttribute("data-theme", t);
+    if (tone) document.documentElement.setAttribute("data-tone", tone);
+    try {
+      if (localStorage.getItem("cursor") === "off") document.documentElement.classList.add("no-cursor");
+      var m = localStorage.getItem("motion"), nv = navigator, lowEnd = (nv.connection && nv.connection.saveData) || (nv.deviceMemory && nv.deviceMemory <= 2) || (nv.hardwareConcurrency && nv.hardwareConcurrency <= 2);
+      if (m === "off" || (m === null && lowEnd)) document.documentElement.classList.add("no-motion");
+    } catch (e) {}
+    var mainFont = { deco: "lora-latin-1ace0d36", e33: "eb-garamond-latin-ef73a8c5", ida: "source-code-pro-latin-a51a4f54",
+                     ghidra: "ibm-plex-mono-400-latin-97032920", binja: "roboto-mono-latin-195cc3f2" }[t] || "jetbrains-mono-latin-0a7197f9";
+    var pre = document.createElement("link");
+    pre.rel = "preload"; pre.as = "font"; pre.type = "font/woff2"; pre.crossOrigin = "anonymous";
+    pre.href = "/static/fonts/" + mainFont + ".woff2";
+    document.head.appendChild(pre);
+  </script>
+  <link rel="stylesheet" href="/static/css/fonts.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/pygments.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/style.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/themes_re.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/cursor.css?v=1793310743">
+  <script src="/static/js/transition.js?v=1793310743"></script>
+</head>
+<body>
+  <aside class="social-rail">
+  
+  <a class="social-icon" href="https://www.linkedin.com/in/kefi-adem-62019a241/" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: #0A66C2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="https://github.com/Blackkader" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--head);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+
+  
+  <a class="social-icon" href="https://discord.com/users/376381309817192448" target="_blank" rel="noopener" aria-label="Discord" style="color: #5865F2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="mailto:adem.kefi@insat.ucar.tn" aria-label="Email" style="color: var(--label);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+
+  <div class="social-rail-line"></div>
+</aside>
+  <nav class="tabbar" aria-label="Sections">
+  <a class="tabbar-brand" href="/">blackkader.exe</a>
+  <div class="tabs">
+    <a class="tab" data-tab="about" href="/#about">About</a>
+    <a class="tab" data-tab="experience" href="/#experience">Experience</a>
+    <a class="tab" data-tab="education" href="/#education">Education</a>
+    <a class="tab" data-tab="projects" href="/#projects">Projects</a>
+    <a class="tab active" data-tab="writeups" href="/posts">Writeups</a>
+  </div>
+  <div class="nav-prefs">
+  <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="true" aria-label="Turn animations on or off">motion: on</button>
+  <button class="cursor-toggle" type="button" data-cursor-toggle aria-pressed="true" aria-label="Turn the animated cursor on or off">cursor: on</button>
+  </div>
+  <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">theme: ida dark</button>
+</nav>
+  <main class="graph graph-wide">
+    
+<article class="block" data-sym="maze1" data-addr="00402000" data-tab="writeups">
+  <div class="block-head">
+    <span class="addr">.text:00402000</span>
+    <span class="sym">maze1</span>
+    <span class="flag">Reverse Engineering</span>
+  </div>
+  <div class="block-body">
+    
+    <p><a class="link-more" href="/posts/fl1tz-x-securinets-mini-ctf">&#9666; back to FL1TZ x Securinets Mini-CTF</a></p>
+    
+    <h1>Maze1</h1>
+    <ul class="chip-list" style="margin-bottom: var(--space-3)">
+      
+      <li class="chip">Reverse Engineering</li>
+      
+      <li class="chip">Python</li>
+      
+      <li class="chip">Remote Challenge</li>
+      
+      <li class="chip">Game Logic</li>
+      
+    </ul>
+    <div class="post-body">
+      <h3><strong>Category :</strong> Reverse Engineering</h3>
+<h3><strong>Description :</strong></h3>
+<blockquote>
+<p>this maze has no sense ! but have patience and do it it's really easy !</p>
+<p><code>nc ctf.fl1tz.me 1036</code></p>
+<p>𝐀𝐮𝐭𝐡𝐨𝐫 : 𝐁𝐥𝐚𝐜𝐤𝐤𝐚𝐝𝐞𝐫</p>
+</blockquote>
+<h3><strong>Files Given :</strong> <em>'maze.py'</em></h3>
+<hr />
+<h3>Solution</h3>
+<p>Seems like it's a remote challenge , hmm as we read the description it says <strong>'this maze has no sense '</strong>  and we have to have patience xD </p>
+<p>If we start the instance , it will tell us that we have to kill <strong>IMU SAMA</strong> </p>
+<p>Let's open our <strong>maze.py</strong> and lurk around , until we find this !</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">imu</span><span class="p">(</span><span class="n">char</span><span class="p">):</span>
+    <span class="n">printt</span><span class="p">(</span><span class="s2">"You see a giant monster with 3 heads , 6 arms and 9 legs"</span><span class="p">)</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">printt</span><span class="p">(</span><span class="s2">"He is the final boss 'IMU' , are you ready ???"</span><span class="p">)</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">printt</span><span class="p">(</span><span class="s2">"What are you going to do ?"</span><span class="p">)</span>
+    <span class="n">square</span><span class="o">=</span><span class="n">Square</span><span class="p">(</span><span class="s2">"Fight"</span><span class="p">,</span><span class="s2">"Run"</span><span class="p">)</span>
+    <span class="n">square</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+    <span class="n">choice</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">"Enter your choice: "</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">choice</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">printt</span><span class="p">(</span><span class="s2">"You are a coward , you run and you fall in a nothingness"</span><span class="p">)</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">exit</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">char</span><span class="o">.</span><span class="n">armament_haki</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">char</span><span class="o">.</span><span class="n">observation_haki</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">char</span><span class="o">.</span><span class="n">conqueror_haki</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">char</span><span class="o">.</span><span class="n">stars</span><span class="o">==</span><span class="mi">5</span> <span class="ow">and</span> <span class="n">char</span><span class="o">.</span><span class="n">glasses</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">printt</span><span class="p">(</span><span class="s2">"You are the strongest , you defeat IMU and you are now the king of the island"</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">printt</span><span class="p">(</span><span class="s2">"You can't be this strong ...."</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">()</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">printt</span><span class="p">(</span><span class="s2">"HAHAHAHAHAHAHAHA"</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Thus, the conditions to win are stated in this line : </p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">char</span><span class="o">.</span><span class="n">armament_haki</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">char</span><span class="o">.</span><span class="n">observation_haki</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">char</span><span class="o">.</span><span class="n">conqueror_haki</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">char</span><span class="o">.</span><span class="n">stars</span><span class="o">==</span><span class="mi">5</span> <span class="ow">and</span> <span class="n">char</span><span class="o">.</span><span class="n">glasses</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>There is no other option beside reading the full code and figure out the right path to kill the boss while having those powerups (conditions) </p>
+<p>So here is the right path :</p>
+<blockquote>
+<p>1-1-5-1-1-1-1-1-1-2-3-1-2-1-2-1-1-1</p>
+</blockquote>
+<p>And by following this path we kill the boss and get this output :</p>
+<p>Good job you killed imu sama with that PUNCH !!!
+here is your key for the next challenge :</p>
+<p>key:</p>
+<div class="codehilite"><pre><span></span><code>FL1TZ{k3yl0ver5_UN1T3!:_t0geth3eR_w3_wILL_sOlv3_tH3_nExT_0n3!!}
+</code></pre></div>
+
+<p>Seems like the flag is telling us something hmmmm..</p>
+    </div>
+  </div>
+</article>
+<div class="edge" aria-hidden="true"></div>
+
+  </main>
+  <footer class="graph">
+  <div class="block block-end">
+    <div class="block-head"><span class="addr">.text:00401F00</span><span class="sym">sub_farewell</span><span class="flag">noreturn</span></div>
+    <div class="block-body">
+      <span class="retn">retn</span> &nbsp;; Adem Kefi (blackkader)
+    </div>
+  </div>
+  
+  <nav class="social-row" aria-label="Contact and social links">
+    
+  <a class="social-icon" href="https://www.linkedin.com/in/kefi-adem-62019a241/" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: #0A66C2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="https://github.com/Blackkader" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--head);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+
+  
+  <a class="social-icon" href="https://discord.com/users/376381309817192448" target="_blank" rel="noopener" aria-label="Discord" style="color: #5865F2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="mailto:adem.kefi@insat.ucar.tn" aria-label="Email" style="color: var(--label);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+  </nav>
+</footer>
+  <div class="statusbar" aria-hidden="true">
+    <span class="st-idle">&#9679; AU: idle</span>
+    <span class="st-hide">Down</span>
+    <span class="st-hide" data-xref-toggle>X: show clickables</span>
+    <span class="st-hide">Disk: 42GB</span>
+    <span class="st-right">
+      <span class="st-addr" data-st-addr>.text:00401000</span>
+      <span class="st-sym" data-st-sym>start</span>
+    </span>
+  </div>
+  <script type="application/json" id="site-index">[{"k": "ctf", "t": "Securinets CTF Quals", "u": "/posts/securinets-quals-2026"}, {"c": "Securinets CTF Quals", "k": "writeup", "t": "Revenant", "u": "/posts/securinets-quals-2026/revenant"}, {"c": "Securinets CTF Quals", "k": "writeup", "t": "Letmethink", "u": "/posts/securinets-quals-2026/letmethink"}, {"k": "ctf", "t": "DarkestHour", "u": "/posts/darkesthour"}, {"c": "DarkestHour", "k": "writeup", "t": "Obfer", "u": "/posts/darkesthour/obfer"}, {"k": "ctf", "t": "Summerrush", "u": "/posts/summerrush"}, {"c": "Summerrush", "k": "writeup", "t": "Adventure Time", "u": "/posts/summerrush/adventuretime"}, {"c": "Summerrush", "k": "writeup", "t": "Hoogments", "u": "/posts/summerrush/hoogments"}, {"c": "Summerrush", "k": "writeup", "t": "Pyshell", "u": "/posts/summerrush/pyshell"}, {"k": "ctf", "t": "Securinets Friendly", "u": "/posts/securinets-friendly"}, {"c": "Securinets Friendly", "k": "writeup", "t": "DynamicIntro", "u": "/posts/securinets-friendly/dynamic-intro"}, {"c": "Securinets Friendly", "k": "writeup", "t": "ExportedActivity", "u": "/posts/securinets-friendly/exported-activity"}, {"c": "Securinets Friendly", "k": "writeup", "t": "IntentHandler", "u": "/posts/securinets-friendly/intent-handler"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Irreversible", "u": "/posts/securinets-friendly/irreversible"}, {"c": "Securinets Friendly", "k": "writeup", "t": "LoginMaster", "u": "/posts/securinets-friendly/login-master"}, {"c": "Securinets Friendly", "k": "writeup", "t": "LoginMaster2", "u": "/posts/securinets-friendly/login-master-2"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Meoww", "u": "/posts/securinets-friendly/meoww"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Native1", "u": "/posts/securinets-friendly/native-1"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Native2", "u": "/posts/securinets-friendly/native-2"}, {"c": "Securinets Friendly", "k": "writeup", "t": "RollTheDice", "u": "/posts/securinets-friendly/roll-the-dice"}, {"c": "Securinets Friendly", "k": "writeup", "t": "SecretDigger", "u": "/posts/securinets-friendly/secret-digger"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Tricky", "u": "/posts/securinets-friendly/tricky"}, {"c": "Securinets Friendly", "k": "writeup", "t": "UnexportedActivity", "u": "/posts/securinets-friendly/unexported-activity"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Welcome", "u": "/posts/securinets-friendly/welcome"}, {"k": "ctf", "t": "FL1TZ x Securinets Mini-CTF", "u": "/posts/fl1tz-x-securinets-mini-ctf"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Anderouid", "u": "/posts/fl1tz-x-securinets-mini-ctf/anderouid"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Hexer", "u": "/posts/fl1tz-x-securinets-mini-ctf/hexer"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Magic", "u": "/posts/fl1tz-x-securinets-mini-ctf/magic"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Maze1", "u": "/posts/fl1tz-x-securinets-mini-ctf/maze1"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Maze2", "u": "/posts/fl1tz-x-securinets-mini-ctf/maze2"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Naggez", "u": "/posts/fl1tz-x-securinets-mini-ctf/naggez"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Oid", "u": "/posts/fl1tz-x-securinets-mini-ctf/oid"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Serialo", "u": "/posts/fl1tz-x-securinets-mini-ctf/serialo"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Stringz", "u": "/posts/fl1tz-x-securinets-mini-ctf/stringz"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "X0r", "u": "/posts/fl1tz-x-securinets-mini-ctf/x0r"}]</script>
+  
+  <script src="/static/js/main.js?v=1793310743" defer></script>
+  <script src="/static/js/nav.js?v=1793310743" defer></script>
+  <script src="/static/js/lightbox.js?v=1793310743" defer></script>
+  <script src="/static/js/minimap.js?v=1793310743" defer></script>
+  <script src="/static/js/palette.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient_e33.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient_re.js?v=1793310743" defer></script>
+  <script src="/static/js/cursor.js?v=1793310743" defer></script>
+</body>
+</html>

@@ -1,0 +1,417 @@
+/* ==========================================================================
+   Three reverse-engineering themes: IDA, Ghidra and Binary Ninja.
+   Each one borrows the vocabulary of its tool (its palette, its windows, its way of showing a program)
+   and turns the page into that tool's view of a binary. No logos or artwork from the tools are used.
+   Loaded after style.css; every rule is scoped to its own data-theme.
+   ========================================================================== */
+
+/* ---------- Theme picker menu (works in every theme: it only uses the theme's variables) ---------- */
+.theme-menu[hidden] { display: none; }
+.theme-menu {
+  position: fixed;
+  z-index: 200;
+  min-width: 12.5rem;
+  max-width: calc(100vw - 16px);
+  padding: 0.3rem;
+  background: var(--bar);
+  color: var(--text);
+  border: 1px solid var(--node-border);
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.42);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+.tm-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.tm-name { color: var(--head); font-weight: 700; }
+.tm-item:hover, .tm-item:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--label) 13%, transparent);
+  border-color: color-mix(in srgb, var(--label) 55%, transparent);
+}
+.tm-item[aria-checked="true"] .tm-name::after { content: "  \25CF"; color: var(--label); font-size: 0.7em; }
+
+/* ---------- Code colours shared by the three themes (each theme sets the --tk-* variables) ---------- */
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite { color: var(--tk-name); }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.n, .g, .l, .x, .p, .o, .ld, .na, .ne, .ni, .nl, .nx, .py, .pm, .w, .esc, .go, .gp, .gs, .ge) { color: var(--tk-name); }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.c, .ch, .cm, .c1, .cpf) { color: var(--tk-cm); font-style: italic; }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.cp, .nd) { color: var(--tk-pp); font-weight: 600; }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.k, .kc, .kd, .kn, .kp, .kr, .kt, .nt, .ow) { color: var(--tk-kw); font-weight: 600; }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.m, .mi, .mh, .mf, .mo, .mb, .il, .gi) { color: var(--tk-num); }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.s, .s1, .s2, .sa, .sb, .sc, .dl, .sd, .se, .sh, .si, .sx, .sr, .ss) { color: var(--tk-str); }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.nf, .fm, .nc, .nn) { color: var(--tk-fn); text-decoration: none; }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.nb, .bp) { color: var(--tk-bi); }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.nv, .no, .vc, .vg, .vi, .vm) { color: var(--tk-var); }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite :is(.gd, .gr, .gt) { color: var(--tk-err); }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite .err { color: var(--tk-err); background: transparent; }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) .codehilite .hll { background: color-mix(in srgb, var(--label) 22%, transparent); }
+
+/* ==========================================================================
+   IDA  ·  the disassembler, in its light default
+   A pale workspace with white views, blue names, and arrows that mean something: green when a branch is taken,
+   red when it is not, blue for a plain jump. Hovering a block outlines it in the yellow IDA uses for a selected node.
+   ========================================================================== */
+:root[data-theme="ida"] {
+  --bg: #e4e9f1;
+  --node: #ffffff;
+  --node-border: #8f9db7;
+  --line: #d6dce8;
+  --text: #1b2231;
+  --muted: #5d6a81;
+  --head: #0a1a40;
+  --addr: #566683;
+  --label: #1747c9;
+  --blue: #1d59e0;
+  --green: #14903f;
+  --red: #d0342c;
+  --yellow: #8a6200;
+  --purple: #7b3fb6;
+  --bar: #d3dae8;
+  --code-bg: #f6f8fc;
+  --hover: #e8a800;
+  --font-mono: "Source Code Pro", "Consolas", "DejaVu Sans Mono", ui-monospace, monospace;
+
+  --tk-name: #1b2231; --tk-cm: #4f78b8; --tk-pp: #9a3a8a; --tk-kw: #0b3fb0; --tk-num: #0f7a8a;
+  --tk-str: #b5471b; --tk-fn: #1747c9; --tk-bi: #0f7a8a; --tk-var: #7b3fb6; --tk-err: #d0342c;
+
+  /* the navigation band's colours, as documented for IDA's default scheme */
+  --nb-lib: #3fc4d6;      /* library functions (FLIRT) */
+  --nb-func: #3f74e0;     /* regular functions */
+  --nb-insn: #8c3b3b;     /* instructions outside a function */
+  --nb-data: #9b9b9b;     /* data */
+  --nb-unexp: #8d8d3a;    /* unexplored */
+  --nb-ext: #cf45b5;      /* imports */
+  --nb-lumina: #7bd22a;   /* Lumina */
+  color-scheme: light;
+}
+:root[data-theme="ida"] body {
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(100, 120, 160, 0.20) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  font-size: 0.86rem;
+  line-height: 1.72;
+}
+:root[data-theme="ida"] ::selection { background: #3a78e8; color: #fff; }
+:root[data-theme="ida"] :is(h1, h2, h3, h4, .hero-name) { font-family: "Source Code Pro", ui-monospace, monospace; font-weight: 700; letter-spacing: -0.01em; }
+:root[data-theme="ida"] .hero-name { color: var(--head); letter-spacing: -0.035em; }
+:root[data-theme="ida"] pre, :root[data-theme="ida"] code, :root[data-theme="ida"] .codehilite, :root[data-theme="ida"] .post-body code { font-family: "Source Code Pro", ui-monospace, monospace; font-size: 0.84rem; font-weight: 400; }
+
+/* toolbar and tabs */
+:root[data-theme="ida"] .tabbar { background: linear-gradient(#e2e7f1, #cfd7e6); border-bottom: 1px solid #98a6c0; }
+:root[data-theme="ida"] .tabbar-brand { color: var(--head); border-right-color: #b3bfd4; font-size: 0.8rem; }
+:root[data-theme="ida"] .tab { color: #44516a; border-right-color: #b3bfd4; }
+:root[data-theme="ida"] .tab:hover { background: rgba(255, 255, 255, 0.6); color: var(--head); }
+:root[data-theme="ida"] .tab.active { background: #ffffff; color: var(--head); border-bottom-color: transparent; box-shadow: inset 0 3px 0 var(--label); }
+:root[data-theme="ida"] .theme-toggle, :root[data-theme="ida"] .cursor-toggle, :root[data-theme="ida"] .motion-toggle { color: #44516a; border-left-color: #b3bfd4; }
+:root[data-theme="ida"] .theme-toggle:hover, :root[data-theme="ida"] .cursor-toggle:hover, :root[data-theme="ida"] .motion-toggle:hover { color: var(--head); background: rgba(255, 255, 255, 0.6); }
+
+/* views: white windows with a title bar, a soft offset shadow, and the selected-node outline on hover */
+:root[data-theme="ida"] .block { background: #fff; border: 1px solid var(--node-border); box-shadow: 3px 3px 0 #c7d0e1; transition: border-color 140ms ease, box-shadow 140ms ease; }
+:root[data-theme="ida"] .block:hover { border-color: var(--hover); box-shadow: 0 0 0 2px rgba(232, 168, 0, 0.55), 3px 3px 0 #c7d0e1; }
+:root[data-theme="ida"] .block-head { background: linear-gradient(#eef2fa, #dfe6f3); border-bottom: 1px solid #b8c3d8; }
+:root[data-theme="ida"] .block-head .addr { color: var(--addr); }
+:root[data-theme="ida"] .block-head .sym { color: var(--label); }
+:root[data-theme="ida"] .comment { color: #4f78b8; font-style: italic; }
+:root[data-theme="ida"] .block-end .retn { color: var(--label); }
+
+/* controls */
+:root[data-theme="ida"] .btn-cv { color: var(--head); background: linear-gradient(#fbfcfe, #e4e9f3); border: 1px solid #8f9db7; border-radius: 3px; font-weight: 600; }
+:root[data-theme="ida"] .btn-cv:hover { background: linear-gradient(#ffffff, #d9e3f7); color: var(--label); border-color: var(--label); }
+:root[data-theme="ida"] .chip { background: #f1f4fa; border: 1px solid #c3ccdd; border-radius: 2px; color: #2a3550; }
+:root[data-theme="ida"] .chip:hover { border-color: var(--hover); color: var(--head); background: #fff8e0; }
+:root[data-theme="ida"] .post-card { background: #fbfcfe; border: 1px solid #c3ccdd; }
+:root[data-theme="ida"] .post-card:hover { background: #fff; border-color: var(--hover); }
+:root[data-theme="ida"] .badge-rank { background: #f6f0fc; }
+:root[data-theme="ida"] .portrait { background: #f1f4fa; border-color: #98a6c0; }
+:root[data-theme="ida"] .timeline-marker { background: var(--label); }
+
+/* code and screenshots sit in white frames */
+:root[data-theme="ida"] .post-body pre { background: #f6f8fc; border: 1px solid #c3ccdd; }
+:root[data-theme="ida"] .post-body img { background: #fff; box-shadow: 0 2px 10px rgba(30, 50, 90, 0.18); }
+
+/* the bar along the bottom, like IDA's status line */
+:root[data-theme="ida"] .statusbar { background: linear-gradient(#dfe5f0, #cdd5e5); border-top: 1px solid #98a6c0; color: #44516a; }
+
+/* ---- IDA, dark tone: the same views on a charcoal workspace (the picker adds data-tone="dark") ---- */
+:root[data-theme="ida"][data-tone="dark"] {
+  --bg: #16181d;
+  --node: #1f232a;
+  --node-border: #404a5c;
+  --line: #2b313b;
+  --text: #d5dae3;
+  --muted: #8591a6;
+  --head: #f1f4fa;
+  --addr: #7f8ba2;
+  --label: #6ea0ff;
+  --blue: #5b96ff;
+  --green: #4fcf7b;
+  --red: #f06a62;
+  --yellow: #e6c35c;
+  --purple: #b890ee;
+  --bar: #262a33;
+  --code-bg: #191c21;
+  --hover: #f0b400;
+
+  --tk-name: #d5dae3; --tk-cm: #6f93d6; --tk-pp: #d58bc6; --tk-kw: #78a7ff; --tk-num: #56c8d6;
+  --tk-str: #e6a074; --tk-fn: #8db6ff; --tk-bi: #56c8d6; --tk-var: #b890ee; --tk-err: #f06a62;
+  color-scheme: dark;
+}
+:root[data-theme="ida"][data-tone="dark"] body { background-image: radial-gradient(rgba(130, 150, 190, 0.11) 1px, transparent 1.2px); }
+:root[data-theme="ida"][data-tone="dark"] ::selection { background: #2f63c8; color: #fff; }
+:root[data-theme="ida"][data-tone="dark"] .tabbar { background: linear-gradient(#272b34, #1c1f26); border-bottom-color: #3a4352; }
+:root[data-theme="ida"][data-tone="dark"] .tabbar-brand { border-right-color: #394150; }
+:root[data-theme="ida"][data-tone="dark"] .tab { color: #9aa6bb; border-right-color: #394150; }
+:root[data-theme="ida"][data-tone="dark"] .tab:hover { background: rgba(255, 255, 255, 0.06); color: var(--head); }
+:root[data-theme="ida"][data-tone="dark"] .tab.active { background: #1f232a; color: var(--head); }
+:root[data-theme="ida"][data-tone="dark"] :is(.theme-toggle, .cursor-toggle, .motion-toggle) { color: #9aa6bb; border-left-color: #394150; }
+:root[data-theme="ida"][data-tone="dark"] :is(.theme-toggle, .cursor-toggle, .motion-toggle):hover { color: var(--head); background: rgba(255, 255, 255, 0.06); }
+:root[data-theme="ida"][data-tone="dark"] .block { background: var(--node); box-shadow: 3px 3px 0 #0e1013; }
+:root[data-theme="ida"][data-tone="dark"] .block:hover { box-shadow: 0 0 0 2px rgba(240, 180, 0, 0.55), 3px 3px 0 #0e1013; }
+:root[data-theme="ida"][data-tone="dark"] .block-head { background: linear-gradient(#2a303b, #232830); border-bottom-color: #3a4352; }
+:root[data-theme="ida"][data-tone="dark"] .comment { color: #6f93d6; }
+:root[data-theme="ida"][data-tone="dark"] .btn-cv { background: linear-gradient(#2c323d, #232830); border-color: #4a5568; }
+:root[data-theme="ida"][data-tone="dark"] .btn-cv:hover { background: linear-gradient(#323a47, #272d37); }
+:root[data-theme="ida"][data-tone="dark"] .chip { background: #262c36; border-color: #3a4352; color: #c4ccd9; }
+:root[data-theme="ida"][data-tone="dark"] .chip:hover { background: #3a3320; color: var(--head); }
+:root[data-theme="ida"][data-tone="dark"] .post-card { background: #232830; border-color: #3a4352; }
+:root[data-theme="ida"][data-tone="dark"] .post-card:hover { background: #2a303b; }
+:root[data-theme="ida"][data-tone="dark"] .badge-rank { background: #2a2538; }
+:root[data-theme="ida"][data-tone="dark"] .portrait { background: #262c36; border-color: #4a5568; }
+:root[data-theme="ida"][data-tone="dark"] .post-body pre { background: var(--code-bg); border-color: #3a4352; }
+:root[data-theme="ida"][data-tone="dark"] .post-body img { background: var(--node); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.55); }
+:root[data-theme="ida"][data-tone="dark"] .statusbar { background: linear-gradient(#272b34, #1c1f26); border-top-color: #3a4352; color: #9aa6bb; }
+:root[data-theme="ida"][data-tone="dark"] .mm[data-mm="ida"] { background: #101216; border-bottom-color: #3a4352; }
+:root[data-theme="ida"][data-tone="dark"] .mm[data-mm="ida"] .mm-view { background: rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(200, 215, 255, 0.65); }
+:root[data-theme="ida"][data-tone="dark"] .mm[data-mm="ida"] .mm-tip { color: #e8ecf4; background: #2b2f38; border-color: #c9a600; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); }
+
+/* ==========================================================================
+   Ghidra  ·  the CodeBrowser, flat dark
+   Slate panels, a darker listing, and Ghidra's own field colours (lightblue mnemonics, green labels, olive registers).
+   Every section opens with a plate comment, the starred banner Ghidra puts above each function.
+   ========================================================================== */
+:root[data-theme="ghidra"] {
+  --bg: #3c3f41;
+  --node: #2b2b2b;
+  --node-border: #515455;
+  --line: #3f4345;
+  --text: #bbbbbb;
+  --muted: #8b949e;
+  --head: #e9e9e9;
+  --addr: #9aa4ae;
+  --label: #87cefa;
+  --blue: #87cefa;
+  --green: #70c070;
+  --red: #f08080;
+  --yellow: #c0c080;
+  --purple: #b79ad8;
+  --bar: #313335;
+  --code-bg: #232323;
+  --hover: #ffb74d;
+  --font-mono: "IBM Plex Mono", "DejaVu Sans Mono", ui-monospace, monospace;
+
+  --plate: #778899;      /* plate comments */
+  --tk-name: #bbbbbb; --tk-cm: #ee82ee; --tk-pp: #c070c0; --tk-kw: #87cefa; --tk-num: #70c070;
+  --tk-str: #70c070; --tk-fn: #87cefa; --tk-bi: #ff99ff; --tk-var: #c0c080; --tk-err: #f08080;
+  color-scheme: dark;
+}
+:root[data-theme="ghidra"] body { background: var(--bg); font-size: 0.84rem; line-height: 1.7; }
+:root[data-theme="ghidra"] ::selection { background: #214283; color: #fff; }
+:root[data-theme="ghidra"] :is(h1, h2, h3, h4, .hero-name) { font-family: "IBM Plex Mono", ui-monospace, monospace; font-weight: 700; }
+:root[data-theme="ghidra"] .hero-name { color: #fff; letter-spacing: -0.03em; }
+:root[data-theme="ghidra"] pre, :root[data-theme="ghidra"] code, :root[data-theme="ghidra"] .codehilite, :root[data-theme="ghidra"] .post-body code { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.82rem; font-weight: 400; }
+
+:root[data-theme="ghidra"] .tabbar { background: #313335; border-bottom: 1px solid #1f2022; }
+:root[data-theme="ghidra"] .tabbar-brand { color: var(--green); border-right-color: #232426; }
+:root[data-theme="ghidra"] .tab { color: #9aa0a6; border-right-color: #2a2c2e; }
+:root[data-theme="ghidra"] .tab:hover { color: #fff; background: #3a3d3f; }
+:root[data-theme="ghidra"] .tab.active { color: #fff; background: #2b2b2b; border-bottom-color: #4b6eaf; }
+:root[data-theme="ghidra"] .theme-toggle, :root[data-theme="ghidra"] .cursor-toggle, :root[data-theme="ghidra"] .motion-toggle { border-left-color: #232426; color: #9aa0a6; }
+:root[data-theme="ghidra"] .theme-toggle:hover, :root[data-theme="ghidra"] .cursor-toggle:hover, :root[data-theme="ghidra"] .motion-toggle:hover { color: #fff; background: #3a3d3f; }
+
+:root[data-theme="ghidra"] .block { background: var(--node); border: 1px solid var(--node-border); box-shadow: none; }
+:root[data-theme="ghidra"] .block:hover { border-color: #4b6eaf; }
+:root[data-theme="ghidra"] .comment { color: #c070c0; }
+:root[data-theme="ghidra"] .btn-cv { color: #e9e9e9; background: #4c5052; border: 1px solid #5e6060; border-radius: 3px; }
+:root[data-theme="ghidra"] .btn-cv:hover { background: #4b6eaf; border-color: #4b6eaf; color: #fff; }
+:root[data-theme="ghidra"] .chip { background: #313335; border: 1px solid #4a4d4f; border-radius: 2px; }
+:root[data-theme="ghidra"] .chip:hover { border-color: #4b6eaf; }
+:root[data-theme="ghidra"] .post-card { background: #2f3133; }
+:root[data-theme="ghidra"] .post-card:hover { border-color: #4b6eaf; }
+:root[data-theme="ghidra"] .portrait { border-color: #515455; background: #313335; }
+:root[data-theme="ghidra"] .post-body pre { background: #232323; border-color: #3f4345; }
+:root[data-theme="ghidra"] .statusbar { background: #313335; border-top: 1px solid #1f2022; }
+
+/* the plate comment: a section's header drawn as Ghidra draws the banner above a function */
+:root[data-theme="ghidra"] .block-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-auto-rows: auto;
+  column-gap: 1ch;
+  align-items: baseline;
+  /* a whole number of characters wide, so the star rows and the text rows end on the same character */
+  width: round(down, 100%, 1ch);
+  padding: 0.7rem 2ch 0.65rem;
+  border-bottom: 0;
+  background: transparent;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  color: var(--plate);
+}
+:root[data-theme="ghidra"] .block-head::before,
+:root[data-theme="ghidra"] .block-head::after {
+  content: "****************************************************************************************************************************************************";
+  grid-column: 1 / -1;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--plate);
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+:root[data-theme="ghidra"] .block-head > * { grid-row: 2; }
+:root[data-theme="ghidra"] .block-head .addr { color: var(--addr); }
+:root[data-theme="ghidra"] .block-head .addr::before { content: "*  "; color: var(--plate); }
+:root[data-theme="ghidra"] .block-head .sym { justify-self: center; color: var(--label); letter-spacing: 0.06em; text-transform: uppercase; }
+:root[data-theme="ghidra"] .block-head .sym::after { content: ""; }
+:root[data-theme="ghidra"] .block-head .flag { color: var(--plate); }
+:root[data-theme="ghidra"] .block-head .flag::after { content: "  *"; }
+:root[data-theme="ghidra"] .block-head > :nth-child(2):last-child::after { content: "  *"; color: var(--plate); }
+/* Narrow screens: the xref label is dropped, so every banner stays on one line */
+@media (max-width: 720px) {
+  :root[data-theme="ghidra"] .block-head .flag.xref { display: none; }
+  :root[data-theme="ghidra"] .block-head:has(> .flag.xref) .sym { justify-self: end; }
+  :root[data-theme="ghidra"] .block-head:has(> .flag.xref) .sym::after { content: "  *"; color: var(--plate); }
+}
+
+/* ==========================================================================
+   Binary Ninja  ·  Ninja Dark
+   Near-black graph canvas, slightly lighter nodes, and the pastel set Binary Ninja uses for syntax and for edges:
+   lime for the branch that is taken, cherry for the one that is not, acai for a plain jump.
+   ========================================================================== */
+:root[data-theme="binja"] {
+  --bg: #141414;
+  --node: #242424;
+  --node-border: #3d3d3d;
+  --line: #2e2e2e;
+  --text: #e0e0e0;
+  --muted: #a6a6a6;
+  --head: #ffffff;
+  --addr: #c5daa4;
+  --label: #a0ceee;
+  --blue: #a0ceee;
+  --green: #c5daa4;
+  --red: #e0a3b3;
+  --yellow: #e6d5a3;
+  --purple: #c8bcf5;
+  --bar: #1b1b1b;
+  --code-bg: #181818;
+  --hover: #a0ceee;
+  --font-mono: "Roboto Mono", ui-monospace, monospace;
+
+  --bn-tangerine: #e4b595; --bn-banana: #e6d5a3; --bn-cyan: #a7d7ce; --bn-seafoam: #a9ceda; --bn-lime: #c5daa4;
+  --bn-guava: #e3b5db; --bn-acai: #a0ceee; --bn-cherry: #e0a3b3; --bn-grape: #c8bcf5; --bn-bg50: #3d3d3d; --bn-fg70: #808080;
+  --tk-name: #e0e0e0; --tk-cm: #808080; --tk-pp: #e3b5db; --tk-kw: #e4b595; --tk-num: #c5daa4;
+  --tk-str: #a0ceee; --tk-fn: #e6d5a3; --tk-bi: #a7d7ce; --tk-var: #a9ceda; --tk-err: #e0a3b3;
+  color-scheme: dark;
+}
+:root[data-theme="binja"] body {
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  font-size: 0.84rem;
+  line-height: 1.72;
+}
+:root[data-theme="binja"] ::selection { background: #587183; color: #fff; }
+:root[data-theme="binja"] :is(h1, h2, h3, h4, .hero-name) { font-family: "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+:root[data-theme="binja"] .hero-name { letter-spacing: -0.04em; font-weight: 700; }
+:root[data-theme="binja"] pre, :root[data-theme="binja"] code, :root[data-theme="binja"] .codehilite, :root[data-theme="binja"] .post-body code { font-family: "Roboto Mono", ui-monospace, monospace; font-size: 0.82rem; font-weight: 400; }
+
+:root[data-theme="binja"] .tabbar { background: #1b1b1b; border-bottom: 1px solid #2c2c2c; }
+:root[data-theme="binja"] .tabbar-brand { color: var(--bn-acai); border-right-color: #2c2c2c; font-family: "Inter", sans-serif; letter-spacing: 0; }
+:root[data-theme="binja"] .tab { color: var(--muted); border-right-color: #262626; font-family: "Inter", sans-serif; font-size: 0.78rem; }
+:root[data-theme="binja"] .tab:hover { color: #fff; }
+:root[data-theme="binja"] .tab.active { color: var(--bn-acai); background: #242424; border-bottom-color: var(--bn-acai); }
+:root[data-theme="binja"] .theme-toggle, :root[data-theme="binja"] .cursor-toggle, :root[data-theme="binja"] .motion-toggle { border-left-color: #262626; font-family: "Inter", sans-serif; }
+
+:root[data-theme="binja"] .block { background: var(--node); border: 1px solid var(--bn-bg50); box-shadow: 0 0 0 1px #141414, 0 12px 30px rgba(0, 0, 0, 0.4); }
+:root[data-theme="binja"] .block:hover { border-color: var(--bn-acai); box-shadow: 0 0 0 1px #141414, 0 0 0 3px rgba(160, 206, 238, 0.14), 0 12px 30px rgba(0, 0, 0, 0.4); }
+:root[data-theme="binja"] .block-head { background: #2c2c2c; border-bottom: 1px solid var(--bn-bg50); }
+:root[data-theme="binja"] .block-head .addr { color: var(--bn-lime); }
+:root[data-theme="binja"] .block-head .sym { color: var(--bn-acai); font-family: "Inter", sans-serif; font-weight: 600; }
+:root[data-theme="binja"] .comment { color: var(--bn-seafoam); }
+:root[data-theme="binja"] .btn-cv { color: #fff; background: #3d3d3d; border: 1px solid #4a4a4a; border-radius: 2px; font-family: "Inter", sans-serif; }
+:root[data-theme="binja"] .btn-cv:hover { background: #4a4a4a; border-color: var(--bn-acai); color: var(--bn-acai); }
+:root[data-theme="binja"] .chip { background: #2c2c2c; border: 1px solid #3d3d3d; border-left: 3px solid var(--bn-grape); border-radius: 2px; }
+:root[data-theme="binja"] .chip:nth-child(3n+1) { border-left-color: var(--bn-acai); }
+:root[data-theme="binja"] .chip:nth-child(3n+2) { border-left-color: var(--bn-lime); }
+:root[data-theme="binja"] .chip:hover { border-color: var(--bn-acai); }
+:root[data-theme="binja"] .post-card { background: #202020; border-color: #343434; }
+:root[data-theme="binja"] .post-card:hover { border-color: var(--bn-acai); }
+:root[data-theme="binja"] .portrait { border-color: #3d3d3d; background: #1b1b1b; }
+:root[data-theme="binja"] .post-body pre { background: #181818; border-color: #343434; }
+:root[data-theme="binja"] .statusbar { background: #1b1b1b; border-top: 1px solid #2c2c2c; }
+
+/* ==========================================================================
+   The page minimap (minimap.js): IDA's navigation band, Ghidra's overview bar, Binary Ninja's feature map
+   ========================================================================== */
+.mm { position: fixed; z-index: 29; display: none; user-select: none; -webkit-user-select: none; touch-action: none; cursor: pointer; }
+.mm .mm-cv { display: block; }
+.mm .mm-view, .mm .mm-marker, .mm .mm-tip { position: absolute; pointer-events: none; }
+.mm .mm-tip { z-index: 2; white-space: nowrap; opacity: 0; transition: opacity 120ms ease; font: 600 11px/1 var(--font-mono); padding: 4px 8px; }
+.mm.hot .mm-tip { opacity: 1; }
+
+/* IDA: a strip under the toolbar. A yellow arrow marks the place being read; a pale box shows what is on screen. */
+:root[data-theme="ida"] .mm[data-mm="ida"] { display: block; left: 0; right: 0; top: var(--mm-top, 54px); height: 16px; background: #c9d1e1; border-bottom: 1px solid #8794ae; }
+:root[data-theme="ida"] .mm[data-mm="ida"] .mm-view { top: 0; bottom: 0; background: rgba(255, 255, 255, 0.3); box-shadow: inset 0 0 0 1px rgba(10, 26, 64, 0.6); }
+:root[data-theme="ida"] .mm[data-mm="ida"] .mm-marker { top: -2px; left: -7px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 11px solid #f3c800; filter: drop-shadow(0 0 0.5px #000) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45)); }
+:root[data-theme="ida"] .mm[data-mm="ida"] .mm-tip { top: 21px; color: #1b2231; background: #fffbe6; border: 1px solid #c9a600; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18); }
+:root[data-theme="ida"] [id] { scroll-margin-top: 5.8rem; }
+
+/* Ghidra: a thin bar along the right edge of the listing. */
+:root[data-theme="ghidra"] .mm[data-mm="ghidra"] { display: block; right: 0; top: var(--mm-top, 54px); bottom: var(--mm-bottom, 33px); width: 14px; background: #232426; border-left: 1px solid #1a1b1c; }
+:root[data-theme="ghidra"] .mm[data-mm="ghidra"] .mm-view { left: 0; right: 0; background: rgba(255, 255, 255, 0.07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55); }
+:root[data-theme="ghidra"] .mm[data-mm="ghidra"] .mm-marker { left: 0; right: 0; top: -1px; height: 2px; background: #ffb74d; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45); }
+:root[data-theme="ghidra"] .mm[data-mm="ghidra"] .mm-tip { right: calc(100% + 6px); color: #e9e9e9; background: #313335; border: 1px solid #515455; }
+
+/* Binary Ninja: the feature map, in cells, with a navigation line. */
+:root[data-theme="binja"] .mm[data-mm="binja"] { display: block; right: 0; top: var(--mm-top, 54px); bottom: var(--mm-bottom, 33px); width: 22px; background: #0d0d0d; border-left: 1px solid #2c2c2c; }
+:root[data-theme="binja"] .mm[data-mm="binja"] .mm-view { left: 0; right: 0; background: rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 0 1px rgba(160, 206, 238, 0.65); }
+:root[data-theme="binja"] .mm[data-mm="binja"] .mm-marker { left: -3px; right: -1px; top: -1px; height: 2px; background: #fff; box-shadow: 0 0 8px rgba(160, 206, 238, 0.95); }
+:root[data-theme="binja"] .mm[data-mm="binja"] .mm-tip { right: calc(100% + 8px); color: #e0e0e0; background: #242424; border: 1px solid #3d3d3d; border-left: 3px solid #a0ceee; font-family: "Roboto Mono", monospace; }
+@media (max-width: 860px) { .mm[data-mm="ghidra"], .mm[data-mm="binja"] { display: none !important; } }
+
+/* ==========================================================================
+   Binary Ninja's command palette (palette.js)
+   ========================================================================== */
+.pal-wrap { position: fixed; inset: 0; z-index: 2147483200; display: none; align-items: flex-start; justify-content: center; padding-top: 14vh; background: rgba(6, 6, 6, 0.6); }
+.pal-wrap.on { display: flex; animation: pal-in 140ms ease-out; }
+@keyframes pal-in { from { opacity: 0; } to { opacity: 1; } }
+.pal { width: min(680px, 92vw); background: #242424; border: 1px solid #3d3d3d; box-shadow: 0 0 0 1px #141414, 0 28px 70px rgba(0, 0, 0, 0.65); font-family: "Roboto Mono", ui-monospace, monospace; animation: pal-up 160ms cubic-bezier(.2,.9,.3,1); }
+@keyframes pal-up { from { transform: translateY(-10px); } to { transform: none; } }
+.pal-input { box-sizing: border-box; width: 100%; padding: 0.95rem 1.1rem; background: #1b1b1b; border: 0; border-bottom: 1px solid #3d3d3d; color: #fff; font: 500 0.95rem "Roboto Mono", ui-monospace, monospace; outline: none; }
+.pal-input::placeholder { color: #808080; }
+.pal-list { list-style: none; margin: 0; padding: 0.35rem; max-height: 46vh; overflow-y: auto; }
+.pal-item { display: grid; grid-template-columns: 5.4rem 1fr auto; gap: 0.8rem; align-items: center; padding: 0.5rem 0.7rem; color: #e0e0e0; font-size: 0.84rem; cursor: pointer; }
+.pal-item[aria-selected="true"] { background: #3d3d3d; box-shadow: inset 3px 0 0 #a0ceee; }
+.pal-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pal-sub { color: #808080; font-size: 0.72rem; white-space: nowrap; }
+.pal-cat { display: block; padding: 0.3rem 0.4rem; border-radius: 2px; color: #141414; font: 700 0.62rem/1 "Inter", sans-serif; letter-spacing: 0.07em; text-align: center; text-transform: uppercase; }
+.pal-acai { background: #a0ceee; } .pal-lime { background: #c5daa4; } .pal-tangerine { background: #e4b595; } .pal-grape { background: #c8bcf5; } .pal-cherry { background: #e0a3b3; }
+.pal-none { padding: 1rem 0.8rem; color: #a6a6a6; font-size: 0.82rem; }
+.pal-foot { display: flex; gap: 1.3rem; padding: 0.5rem 1rem; border-top: 1px solid #3d3d3d; color: #808080; font: 500 0.68rem "Inter", sans-serif; }
+.pal-foot kbd { margin-right: 0.3rem; padding: 0.08rem 0.4rem; background: #1b1b1b; border: 1px solid #3d3d3d; border-radius: 2px; color: #a6a6a6; font: inherit; }
+.st-palette { color: #a0ceee; cursor: pointer; padding: 0 0.3rem; border-bottom: 1px dotted rgba(160, 206, 238, 0.6); }
+.st-palette:hover, .st-palette:focus-visible { color: #fff; outline: none; border-bottom-color: #fff; }
+@media (max-width: 860px) { .st-palette { display: none; } }
+
+/* Cursor and motion switches: coloured when on, muted when off, like in the other themes */
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) :is(.cursor-toggle, .motion-toggle) { color: var(--label); }
+:root:is([data-theme="ida"], [data-theme="ghidra"], [data-theme="binja"]) :is(.cursor-toggle, .motion-toggle)[aria-pressed="false"] { color: var(--muted); }

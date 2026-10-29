@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-dIZvJ8DqW/1X4y0O6aI5UPABQELt1l2BTHohK5HWvVE=' 'sha256-9HHnGVC497OjgOFzxn/+mDm2PxMkGmqK0aKJxMa9a48='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Letmethink</title>
+  <meta name="description" content="A lost expeditioner.">
+  <meta property="og:title" content="Adem Kefi">
+  <meta property="og:description" content="A lost expeditioner.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <script>
+    // Apply the saved theme before first paint, and start fetching that theme's main font right away.
+    // IDA Dark is the default (IDA's two tones share data-theme="ida"); "ember" (older visits stored "ida_dark") is Ember & Ash, which has no data-theme.
+    var t = "ida", tone = "dark";
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "ember" || saved === "ida_dark") { t = "ember"; tone = ""; }
+      else if (saved === "deco" || saved === "e33" || saved === "ghidra" || saved === "binja") { t = saved; tone = ""; }
+      else if (saved === "ida") tone = "";
+    } catch (e) {}
+    if (t !== "ember") document.documentElement.setAttribute("data-theme", t);
+    if (tone) document.documentElement.setAttribute("data-tone", tone);
+    try {
+      if (localStorage.getItem("cursor") === "off") document.documentElement.classList.add("no-cursor");
+      var m = localStorage.getItem("motion"), nv = navigator, lowEnd = (nv.connection && nv.connection.saveData) || (nv.deviceMemory && nv.deviceMemory <= 2) || (nv.hardwareConcurrency && nv.hardwareConcurrency <= 2);
+      if (m === "off" || (m === null && lowEnd)) document.documentElement.classList.add("no-motion");
+    } catch (e) {}
+    var mainFont = { deco: "lora-latin-1ace0d36", e33: "eb-garamond-latin-ef73a8c5", ida: "source-code-pro-latin-a51a4f54",
+                     ghidra: "ibm-plex-mono-400-latin-97032920", binja: "roboto-mono-latin-195cc3f2" }[t] || "jetbrains-mono-latin-0a7197f9";
+    var pre = document.createElement("link");
+    pre.rel = "preload"; pre.as = "font"; pre.type = "font/woff2"; pre.crossOrigin = "anonymous";
+    pre.href = "/static/fonts/" + mainFont + ".woff2";
+    document.head.appendChild(pre);
+  </script>
+  <link rel="stylesheet" href="/static/css/fonts.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/pygments.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/style.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/themes_re.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/cursor.css?v=1793310743">
+  <script src="/static/js/transition.js?v=1793310743"></script>
+</head>
+<body>
+  <aside class="social-rail">
+  
+  <a class="social-icon" href="https://www.linkedin.com/in/kefi-adem-62019a241/" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: #0A66C2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="https://github.com/Blackkader" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--head);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+
+  
+  <a class="social-icon" href="https://discord.com/users/376381309817192448" target="_blank" rel="noopener" aria-label="Discord" style="color: #5865F2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="mailto:adem.kefi@insat.ucar.tn" aria-label="Email" style="color: var(--label);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+
+  <div class="social-rail-line"></div>
+</aside>
+  <nav class="tabbar" aria-label="Sections">
+  <a class="tabbar-brand" href="/">blackkader.exe</a>
+  <div class="tabs">
+    <a class="tab" data-tab="about" href="/#about">About</a>
+    <a class="tab" data-tab="experience" href="/#experience">Experience</a>
+    <a class="tab" data-tab="education" href="/#education">Education</a>
+    <a class="tab" data-tab="projects" href="/#projects">Projects</a>
+    <a class="tab active" data-tab="writeups" href="/posts">Writeups</a>
+  </div>
+  <div class="nav-prefs">
+  <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="true" aria-label="Turn animations on or off">motion: on</button>
+  <button class="cursor-toggle" type="button" data-cursor-toggle aria-pressed="true" aria-label="Turn the animated cursor on or off">cursor: on</button>
+  </div>
+  <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">theme: ida dark</button>
+</nav>
+  <main class="graph graph-wide">
+    
+<article class="block" data-sym="letmethink" data-addr="00402000" data-tab="writeups">
+  <div class="block-head">
+    <span class="addr">.text:00402000</span>
+    <span class="sym">letmethink</span>
+    <span class="flag">Reverse Engineering</span>
+  </div>
+  <div class="block-body">
+    
+    <p><a class="link-more" href="/posts/securinets-quals-2026">&#9666; back to Securinets CTF Quals</a></p>
+    
+    <h1>Letmethink</h1>
+    <ul class="chip-list" style="margin-bottom: var(--space-3)">
+      
+      <li class="chip">rev</li>
+      
+      <li class="chip">elf</li>
+      
+      <li class="chip">go</li>
+      
+      <li class="chip">vm</li>
+      
+      <li class="chip">anti-debug</li>
+      
+      <li class="chip">syscalls</li>
+      
+    </ul>
+    <div class="post-body">
+      <h2><strong>Challenge Name :</strong> Letmethink</h2>
+<h3><strong>Category :</strong> Reverse Engineering</h3>
+<h3><strong>Description :</strong></h3>
+<blockquote>
+<p>Just a simple ...
+Wait , let me think .
+</p>
+</blockquote>
+<h3><strong>𝐀𝐮𝐭𝐡𝐨𝐫 : <a href="https://github.com/Blackkader/">𝐁𝐥𝐚𝐜𝐤𝐤𝐚𝐝𝐞𝐫</a></strong></h3>
+<hr />
+<h3><strong>Files Given :</strong> <em>'letmethink.zip'</em></h3>
+<hr />
+<h3>Solution</h3>
+<p>We unzip and we get 1 <strong>binary</strong> we try to run it and it asks us to type 'letmethink' , if you type anything here , it should exit with an error . </p>
+<p>Next we throw it in ida and open main function : </p>
+<div class="codehilite"><pre><span></span><code><span class="kr">__int64</span><span class="w"> </span><span class="kr">__fastcall</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">a2</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">a3</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">v4</span><span class="p">;</span><span class="w"> </span><span class="c1">// eax</span>
+<span class="w">  </span><span class="p">.</span>
+<span class="w">  </span><span class="p">.</span>
+<span class="w">  </span><span class="p">.</span>
+<span class="w">  </span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int64</span><span class="w"> </span><span class="n">v66</span><span class="p">;</span><span class="w"> </span><span class="c1">// [rsp+88h] [rbp-40h]</span>
+
+<span class="w">  </span><span class="n">v66</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">__readfsqword</span><span class="p">(</span><span class="mh">0x28u</span><span class="p">);</span>
+<span class="w">  </span><span class="n">si128</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm_load_si128</span><span class="p">((</span><span class="k">const</span><span class="w"> </span><span class="kr">__m128i</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">xmmword_A20</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm_load_si128</span><span class="p">((</span><span class="k">const</span><span class="w"> </span><span class="kr">__m128i</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">xmmword_9B0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v65</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm_load_si128</span><span class="p">((</span><span class="k">const</span><span class="w"> </span><span class="kr">__m128i</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">xmmword_AC0</span><span class="p">);</span>
+<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="kr">__m128i</span><span class="w"> </span><span class="o">*</span><span class="p">)((</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">v65</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm_load_si128</span><span class="p">((</span><span class="k">const</span><span class="w"> </span><span class="kr">__m128i</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">xmmword_A30</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">time</span><span class="p">(</span><span class="n">timer</span><span class="o">:</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+<span class="w">  </span><span class="n">srand</span><span class="p">(</span><span class="n">seed</span><span class="o">:</span><span class="w"> </span><span class="n">v4</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1DB0</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">a2</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1CF0</span><span class="p">(</span><span class="n">file</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">a2</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v6</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v6</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1C40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mf">3735929052L</span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">a2</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v9</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v10</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v59</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v10</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v12</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1C40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mf">3735929047L</span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v5</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v11</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v10</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v18</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v17</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v12</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v13</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v14</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v16</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v15</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v18</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v58</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v7</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v18</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v19</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getenv</span><span class="p">(</span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="s">"TRUSTISKEY"</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">!</span><span class="n">v19</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="n">v19</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">:</span><span class="w"> </span><span class="s">"type 'letmethink' : "</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v60</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v7</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1E40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v58</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v7</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v19</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v21</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="o">*</span><span class="n">v19</span><span class="p">;</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">v19</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">((</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v62</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v20</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">v22</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">();</span>
+<span class="w">    </span><span class="o">++</span><span class="n">v19</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v23</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mh">0x410410410410411LL</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">__int128</span><span class="p">)(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int64</span><span class="p">)</span><span class="n">v22</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">64</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v20</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v22</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">63</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">((((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int64</span><span class="p">)(</span><span class="n">v22</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v23</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v23</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">v24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1C40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mf">3735929313L</span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="s">"asdf"</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v20</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v27</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v26</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v24</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="s">"asdf"</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v25</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v27</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v30</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v27</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v62</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v27</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v31</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1C40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mf">3735929055L</span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v27</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v28</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v29</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v56</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v32</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v34</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v33</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v31</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v30</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v58</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v60</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v35</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v56</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v60</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">v34</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">else</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">v61</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a2</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v36</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v37</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v7</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v37</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">v36</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="n">v38</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rand</span><span class="p">();</span>
+<span class="w">      </span><span class="n">v35</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)(</span><span class="n">v38</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">31</span><span class="p">);</span>
+<span class="w">      </span><span class="n">LODWORD</span><span class="p">(</span><span class="n">v35</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v38</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">255</span><span class="p">;</span>
+<span class="w">      </span><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">v58</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v36</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v38</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">255</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">v39</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v37</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span>
+<span class="w">      </span><span class="n">v39</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v7</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v40</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v58</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v39</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v41</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1C40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mf">3735929045L</span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v40</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v35</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v42</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v7</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v5</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v40</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v43</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v41</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v42</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v5</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v44</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1C40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mf">3735929053L</span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v42</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v46</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v44</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v59</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v45</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v48</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1C40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mf">3735929244L</span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="o">&amp;</span><span class="n">unk_95C</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v61</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v47</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">4096</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v49</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v62</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v52</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v48</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v62</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v50</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v51</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">a3</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v53</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1C40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mf">3735929053L</span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v49</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">v54</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v53</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">v21</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Looking at this main function, it looks messy with all those weird sub_1C40 calls, but if you look closer, the pattern is pretty obvious :
+First, it calculates some sizes :
+- sub_1DB0 gets the total file size of argv[0].
+- sub_1CF0 parses the ELF header to get the size of this stub itself.
+- So v5 - v7 is literally just the size of the payload appended to the binary .
+Now what is sub_1C40 with those huge numbers like 3735929052LL (0xDEADC0DC) ? 
+It’s an obfuscated direct syscall dispatcher ! It xors the syscall numbers at runtime with a constant (0xDEADC0DE) to call open, mmap, memfd_create, write, munmap, and execveat without leaving standard libc imports .
+Then we have this juicy part :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v19</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getenv</span><span class="p">(</span><span class="n">name</span><span class="o">:</span><span class="w"> </span><span class="s">"TRUSTISKEY"</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">!</span><span class="n">v19</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="n">v19</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getpass</span><span class="p">(</span><span class="n">prompt</span><span class="o">:</span><span class="w"> </span><span class="s">"type 'letmethink' : "</span><span class="p">);</span>
+<span class="n">v60</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v7</span><span class="p">;</span>
+<span class="n">v21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_1E40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v58</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v7</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v19</span><span class="p">);</span>
+</code></pre></div>
+
+<p>It takes our input string (or checks if TRUSTISKEY env var is set) and passes it to sub_1E40 along with the appended data . That's the decryption routine (RC4) . Right after decrypting , it loops and overwrites v19 with random chars from characters[] to wipe the password from memory . 
+And finally :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v27</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v26</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v24</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="s">"asdf"</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v25</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">// memfd_create("asdf")</span>
+<span class="p">...</span>
+<span class="n">v34</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v33</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v31</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v30</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v58</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v60</span><span class="p">);</span><span class="w"> </span><span class="c1">// write(fd, decrypted_elf, size)</span>
+<span class="p">...</span>
+<span class="n">v52</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v48</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v62</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v50</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v51</span><span class="p">,</span><span class="w"> </span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">a3</span><span class="p">);</span><span class="w"> </span><span class="c1">// execveat(fd, "", ...)</span>
+</code></pre></div>
+
+<p>It creates an anonymous in-memory file with memfd_create, writes the decrypted ELF directly into that file descriptor , wipes the decrypted buffer with random bytes, and runs it using execveat !
+So this whole binary is just an in-memory unpacker / loader .
+Now do we need to reverse the decryption function and write an unpacker script ?
+We can, but dynamic analysis is our ally here ! If the binary is decrypting the full ELF in memory and writing it into a file descriptor, we can just intercept that write syscall and grab the binary right before it executes .</p>
+<p>Let's trace the relevant syscalls to see what's happening :</p>
+<p><img width="1033" height="195" loading="lazy" decoding="async" alt="upsie" src="/static/img/writeups/securinets-quals-2026/letmethink/2.png" /></p>
+<p>Look at that write syscall : it is writing 25177232 bytes (around 25 MB) starting with \x7fELF directly into file descriptor 4 ! The entire unpacked binary is handed to us on a silver platter in a single syscall .
+Next move ? DUMP IT OUT using gdb :</p>
+<p><img width="977" height="247" loading="lazy" decoding="async" alt="upsie" src="/static/img/writeups/securinets-quals-2026/letmethink/3.png" /></p>
+<p>Then we hit the breakpoint few times until we reach the desired write call.
+In the x86_64 calling convention for syscalls :
+- $rdi = fd
+- $rsi = buffer pointer (where the decrypted ELF starts)
+- $rdx = count (size of the buffer in bytes)</p>
+<p>So at the right breakpoint we just dump the memory from \$rsi to \$rsi + \$rdx into a file :</p>
+<div class="codehilite"><pre><span></span><code>dump memory unpacked.elf $rsi $rsi+$rdx
+</code></pre></div>
+
+<p>And boom we have our unpacked binary : </p>
+<p><img width="727" height="557" loading="lazy" decoding="async" alt="upsie" src="/static/img/writeups/securinets-quals-2026/letmethink/4.png" /></p>
+<p>Ahh it's in golang .</p>
+<p>We try running the binary again and now it doesnt ask for letmethink input as we expected , but still crashes.</p>
+<p>The next step is throwing the binary in ida and analyze it .</p>
+<p>If you open a Go binary and find zero recognizable and missing string literals, it is almost certainly <a href="https://github.com/burrowers/garble">Garble</a>-protected and that's our case here , so finding main.main manually is just mapping the sourcecode from the github repo to our pseudocode / assembly :</p>
+<p>Ida shows the start function for us of course :</p>
+<div class="codehilite"><pre><span></span><code>xor     ecx, ecx
+lea     rdi, loc_2EABC0
+call    cs:__libc_start_main_ptr
+hlt
+</code></pre></div>
+
+<p>Presence of __libc_start_main initially suggested CGO linkage.
+In the System V AMD64 ABI, rdi = first argument = the C main() wrapper that libc will call. That is our next target.</p>
+<p>-&gt; loc_2EABC0 to find the interesting part :</p>
+<div class="codehilite"><pre><span></span><code>.text:00000000002EACDC&gt;&gt;&gt;                 call    sub_2EEDC0
+.text:00000000002EACE1                    mov     eax, [rsp+18h]
+.text:00000000002EACE5                    mov     [rsp], eax
+.text:00000000002EACE8                    mov     rax, [rsp+20h]
+.text:00000000002EACED                    mov     [rsp+8], rax
+.text:00000000002EACF2&gt;&gt;&gt;                 call    sub_2EED80
+.text:00000000002EACF7&gt;&gt;&gt;                 call    sub_2EEB80
+.text:00000000002EACFC&gt;&gt;&gt;                 call    sub_2EECC0
+.text:00000000002EAD01                    lea     rax, off_15D5E60
+.text:00000000002EAD08                    push    rax
+.text:00000000002EAD09&gt;&gt;&gt;                 call    sub_2EED40
+.text:00000000002EAD0E                    pop     rax
+.text:00000000002EAD0F&gt;&gt;&gt;                 call    sub_2EAD80
+.text:00000000002EAD14&gt;&gt;&gt;                 call    sub_2EC920
+</code></pre></div>
+
+<p>So we have the Call sequence identified:
+    call sub_2EEDC0   ; runtime.schedinit
+    call sub_2EED80   ; runtime.args
+    call sub_2EEB80   ; runtime.osinit
+    call sub_2EECC0   ; runtime.schedinit / initsig
+    lea  rax, off_15D5E60   ; &lt;- POINTER TO runtime.main
+    push rax
+    call sub_2EED40   ; runtime.newproc — spawns runtime.main goroutine
+    call sub_2EAD80   ; runtime.mstart  — starts the scheduler
+    call sub_2EC920   ; runtime.exit / abort (never returns)
+VERIFIED AGAINST <a href="https://github.com/golang/go/blob/master/src/runtime/proc.go">GO SOURCE</a> :</p>
+<p>The bootstrap sequence comment in the source reads:</p>
+<div class="codehilite"><pre><span></span><code>// The bootstrap sequence is:
+//
+//  call osinit
+//  call schedinit
+//  make &amp; queue new G
+//  call runtime·mstart
+//
+// The new G calls runtime·main.
+</code></pre></div>
+
+<p>Matches exactly.
+Golden pointer: off_15D5E60 -&gt; loc_2B47C0 (runtime.main)</p>
+<p>-&gt; loc_2B47C0 and we find the flow :</p>
+<div class="codehilite"><pre><span></span><code>call sub_2EAE40   ; doInit(runtime_inittasks)   -- runtime pkg inits
+call sub_2EE0A0   ; gcenable()                  -- enable GC
+; loop: call sub_2C1CA0 for each module         -- doInit(m.inittasks)
+call sub_2944E0   ; main package init tasks
+call sub_2C0BE0   ; close(mainInitDoneChan)
+</code></pre></div>
+
+<p>CRITICAL FINDING from Go source:
+  <strong>main_main is called INDIRECTLY</strong>. The source reads:</p>
+<div class="codehilite"><pre><span></span><code>fn := main_main // make an indirect call, as the linker doesn't know the address of the main package when laying down the runtime
+fn()
+</code></pre></div>
+
+<ul>
+<li>Located the indirect call in runtime.main:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>.text:00000000002B4BC4                    mov     rax, cs:off_172D5D8
+.text:00000000002B4BCB                    lea     rdx, off_172D5D8
+.text:00000000002B4BD2&gt;&gt;&gt;                 call    rax ; sub_F705E0
+</code></pre></div>
+
+<ul>
+<li>
+<p>FALSE LEAD: sub_2BE140 appeared to be main.main (called just before
+  exit-flag checks). Opened xrefs showed 5 callers. Garbage .
+  A garble-obfuscated main.main has exactly 1 caller (runtime.main).</p>
+</li>
+<li>
+<p>CONFIRMED sub_F705E0 = main.main:
+  Xref list showed exactly 3 entries:
+<img width="887" height="159" loading="lazy" decoding="async" alt="upsie" src="/static/img/writeups/securinets-quals-2026/letmethink/5.png" />
+  This matches exactly the fn := main_main pattern from Go source.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>NOTE:</strong> 
+You can find the main function however you want , i just prefer this way .</p>
+</blockquote>
+<p>Main :</p>
+<div class="codehilite"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="kr">__fastcall</span><span class="w"> </span><span class="n">__noreturn</span><span class="w"> </span><span class="nf">mainfunc</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kr">__int64</span><span class="w"> </span><span class="n">v0</span><span class="p">;</span><span class="w"> </span><span class="c1">// rbp</span>
+<span class="w">  </span><span class="p">.</span>
+<span class="w">  </span><span class="p">.</span>
+<span class="w">  </span><span class="p">.</span>
+<span class="w">  </span><span class="kr">__int64</span><span class="w"> </span><span class="n">v26</span><span class="p">;</span><span class="w"> </span><span class="c1">// [rsp+190h] [rbp-8h]</span>
+
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int64</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v14</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">v1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="n">sub_2EAFA0</span><span class="p">();</span>
+<span class="w">  </span><span class="n">v26</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v0</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v25</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v2</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="p">)</span><span class="n">sub_F7D3E0</span><span class="p">()</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="kr">__fastcall</span><span class="w"> </span><span class="o">**</span><span class="p">)(</span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_UNKNOWN</span><span class="w"> </span><span class="o">**</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_UNKNOWN</span><span class="w"> </span><span class="o">**</span><span class="p">))</span><span class="n">off_175A538</span><span class="p">[</span><span class="mi">0</span><span class="p">])(</span>
+<span class="w">      </span><span class="o">**</span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="w"> </span><span class="o">**</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span>
+<span class="w">      </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int16</span><span class="p">)</span><span class="n">word_175A510</span><span class="p">,</span>
+<span class="w">      </span><span class="n">off_175A538</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="w">      </span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">7</span><span class="p">),</span>
+<span class="w">      </span><span class="n">off_175A518</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">    </span><span class="n">v24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v2</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_2E3E00</span><span class="p">();</span>
+<span class="w">    </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">unk_1687F28</span><span class="p">;</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v24</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v3</span><span class="p">;</span>
+<span class="w">    </span><span class="n">sub_530E00</span><span class="p">();</span>
+<span class="w">    </span><span class="n">v12</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_44CF00</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">sub_F89AE0</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sub_F80B20</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sub_F91E80</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sub_F89AE0</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sub_F91EC0</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sub_F89AE0</span><span class="p">();</span>
+<span class="w">  </span><span class="n">sub_F91EC0</span><span class="p">();</span>
+<span class="w">  </span><span class="n">v19</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="kr">__int64</span><span class="w"> </span><span class="p">(</span><span class="o">***</span><span class="p">)(</span><span class="kt">void</span><span class="p">))(</span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">16L</span><span class="n">L</span><span class="p">))();</span>
+<span class="w">  </span><span class="n">v15</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2654506009L</span><span class="n">L</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qword_1744848</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v17</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qword_1744848</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int64</span><span class="p">)</span><span class="n">qword_1744848</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mh">0x20</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">v6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_2E7F20</span><span class="p">();</span>
+<span class="w">    </span><span class="n">v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v17</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_OWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">v6</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">else</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">v18</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v2</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v18</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v2</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v18</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">v13</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-21037</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">off_1744840</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qword_1744848</span><span class="p">;</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v8</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v10</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">v10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v11</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v7</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="o">*</span><span class="p">((</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v13</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFFFFFFFFFFFFFFFELL</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v10</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">v4</span><span class="w"> </span><span class="p">)</span>
+<span class="w">      </span><span class="k">goto</span><span class="w"> </span><span class="n">LABEL_19</span><span class="p">;</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">v5</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v10</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v11</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">v21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v5</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v20</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="kr">__int64</span><span class="w"> </span><span class="p">(</span><span class="kr">__fastcall</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_UNKNOWN</span><span class="w"> </span><span class="o">**</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="n">_UNKNOWN</span><span class="w"> </span><span class="o">**</span><span class="p">))</span><span class="o">*</span><span class="n">off_175A548</span><span class="p">)(</span>
+<span class="w">          </span><span class="mi">1437662761</span><span class="p">,</span>
+<span class="w">          </span><span class="o">*</span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int16</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">12</span><span class="p">),</span>
+<span class="w">          </span><span class="n">off_175A548</span><span class="p">,</span>
+<span class="w">          </span><span class="mi">32106</span><span class="p">,</span>
+<span class="w">          </span><span class="n">off_175A540</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">  </span><span class="n">v16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">;</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">!</span><span class="n">sub_438760</span><span class="p">()</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="p">)</span><span class="n">sub_F7D3E0</span><span class="p">()</span><span class="w"> </span><span class="p">)</span>
+<span class="w">      </span><span class="n">v12</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_44CF00</span><span class="p">();</span>
+<span class="w">    </span><span class="n">v23</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v16</span><span class="p">;</span>
+<span class="w">    </span><span class="n">v22</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v20</span><span class="p">;</span>
+<span class="w">    </span><span class="n">sub_563820</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">!</span><span class="n">sub_564900</span><span class="p">()</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="kr">__fastcall</span><span class="w"> </span><span class="o">***</span><span class="p">)(</span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">))(</span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">8L</span><span class="n">L</span><span class="p">))(</span>
+<span class="w">        </span><span class="mh">0x23ACB440B490A1BBLL</span><span class="p">,</span>
+<span class="w">        </span><span class="mf">4294967175L</span><span class="n">L</span><span class="p">,</span>
+<span class="w">        </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">8L</span><span class="n">L</span><span class="p">),</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="p">)</span><span class="n">byte_175A528</span><span class="p">,</span>
+<span class="w">        </span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="w">      </span><span class="n">sub_437E80</span><span class="p">();</span>
+<span class="w">      </span><span class="n">sub_2E5FE0</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v12</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">sub_2E5FE0</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v12</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">sub_2E5FE0</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v12</span><span class="p">);</span>
+<span class="nl">LABEL_19</span><span class="p">:</span>
+<span class="w">  </span><span class="n">sub_2ECDE0</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Basically the first IF block is <strong>Stack Guard Check</strong> and the second IF block is <strong>AntiDebug Check</strong> and it  literally translates to : </p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="nx">AmIDebugged</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">"wrong os version"</span><span class="p">)</span>
+<span class="w">        </span><span class="nx">os</span><span class="p">.</span><span class="nx">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>The string is just a decoy , has nothing to do with os version .
+Next called functions are decoys as well .</p>
+<div class="codehilite"><pre><span></span><code><span class="n">sub_F89AE0</span><span class="p">();</span>
+<span class="n">sub_F80B20</span><span class="p">();</span>
+<span class="n">sub_F91E80</span><span class="p">();</span>
+<span class="n">sub_F89AE0</span><span class="p">();</span>
+<span class="n">sub_F91EC0</span><span class="p">();</span>
+<span class="n">sub_F89AE0</span><span class="p">();</span>
+<span class="n">sub_F91EC0</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Now we gonna continue explaining each part , so the writeup will be INSANELY long :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v109</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="kr">__int64</span><span class="w"> </span><span class="p">(</span><span class="o">***</span><span class="p">)(</span><span class="kt">void</span><span class="p">))(</span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">16L</span><span class="n">L</span><span class="p">))();</span>
+<span class="n">v100</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2654506009L</span><span class="n">L</span><span class="p">;</span>
+<span class="n">v3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qword_1744848</span><span class="p">;</span>
+<span class="n">v106</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qword_1744848</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int64</span><span class="p">)</span><span class="n">qword_1744848</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mh">0x20</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">v5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_2E7F20</span><span class="p">();</span><span class="w"> </span>
+<span class="w">  </span><span class="n">v3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v106</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_OWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">v5</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">v108</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v108</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v108</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">v91</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-21037</span><span class="p">;</span><span class="w"> </span>
+<span class="n">v6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">off_1744840</span><span class="p">;</span>
+<span class="n">v7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qword_1744848</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v7</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v9</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">v9</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v6</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="o">*</span><span class="p">((</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v91</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFFFFFFFFFFFFFFFELL</span><span class="p">));</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v9</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">v3</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">goto</span><span class="w"> </span><span class="n">LABEL_214</span><span class="p">;</span><span class="w"> </span>
+<span class="w">  </span><span class="o">*</span><span class="p">((</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">v4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v9</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v10</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">v115</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v4</span><span class="p">;</span>
+</code></pre></div>
+
+<p>Translates to :</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">script</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">randomDat</span><span class="p">))</span>
+<span class="nx">key2</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">{</span><span class="mh">0xD3</span><span class="p">,</span><span class="w"> </span><span class="mh">0xAD</span><span class="p">}</span>
+<span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">randomDat</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">script</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="nx">key2</span><span class="p">[</span><span class="nx">i</span><span class="o">%</span><span class="mi">2</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<ul>
+<li>off_1744840 / qword_1744848: embedded randomDat (//go:embed random.dat)</li>
+<li>-21037 in 16-bit hex is 0xADD3, meaning bytes {0xD3, 0xAD} in little-endian.</li>
+<li>i - (i &amp; ~1) is bitwise equivalent to i % 2.</li>
+</ul>
+<p>Next :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v110</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="kr">__int64</span><span class="w"> </span><span class="p">(</span><span class="kr">__fastcall</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_UNKNOWN</span><span class="w"> </span><span class="o">**</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="n">_UNKNOWN</span><span class="w"> </span><span class="o">**</span><span class="p">))</span><span class="o">*</span><span class="n">off_175A548</span><span class="p">)(</span>
+<span class="w">         </span><span class="mi">1437662761</span><span class="p">,</span>
+<span class="w">         </span><span class="o">*</span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int16</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">12</span><span class="p">),</span>
+<span class="w">         </span><span class="n">off_175A548</span><span class="p">,</span>
+<span class="w">         </span><span class="mi">32106</span><span class="p">,</span>
+<span class="w">         </span><span class="n">off_175A540</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="n">v101</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">sub_438760</span><span class="p">()</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="nl">LABEL_213</span><span class="p">:</span>
+<span class="w">  </span><span class="n">sub_2E5FE0</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v81</span><span class="p">);</span>
+<span class="nl">LABEL_214</span><span class="p">:</span>
+<span class="w">  </span><span class="n">sub_2ECDE0</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Translates to :</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">genScript</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="s">"generator.py"</span>
+<span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">WriteFile</span><span class="p">(</span><span class="nx">genScript</span><span class="p">,</span><span class="w"> </span><span class="nx">script</span><span class="p">,</span><span class="w"> </span><span class="mo">0755</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="o">-</span><span class="w"> </span><span class="o">*</span><span class="nx">off_175A548</span><span class="p">:</span><span class="w"> </span><span class="nx">Garble</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nx">decryptor</span><span class="w"> </span><span class="nx">reconstructing</span><span class="w"> </span><span class="s">"generator.py"</span>
+<span class="o">-</span><span class="w"> </span><span class="nx">sub_438760</span><span class="p">:</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">WriteFile</span>
+</code></pre></div>
+
+<p>REMEMBER ! this becomes easier using dynamic analysis .</p>
+<p>Now the second antidebug check : </p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="p">)</span><span class="n">sub_F7D3E0</span><span class="p">()</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="n">v81</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_44CF00</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Translates to</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="nx">AmIDebugged</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">os</span><span class="p">.</span><span class="nx">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Next :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v117</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v101</span><span class="p">;</span>
+<span class="n">v117</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v110</span><span class="p">;</span>
+<span class="n">sub_563820</span><span class="p">();</span><span class="w">          </span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">sub_564900</span><span class="p">()</span><span class="w"> </span><span class="p">)</span><span class="w">    </span>
+<span class="p">{</span>
+<span class="nl">LABEL_212</span><span class="p">:</span>
+<span class="w">  </span><span class="n">sub_2E5FE0</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v81</span><span class="p">);</span>
+<span class="w">  </span><span class="k">goto</span><span class="w"> </span><span class="n">LABEL_213</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>translates to :</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">cmd</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">exec</span><span class="p">.</span><span class="nx">Command</span><span class="p">(</span><span class="s">"python3"</span><span class="p">,</span><span class="w"> </span><span class="nx">genScript</span><span class="p">)</span>
+<span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">cmd</span><span class="p">.</span><span class="nx">Run</span><span class="p">();</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>IMPORTANT :</strong> 
+<strong>At this point,IDA stops decompiling and gives up.<br />
+Go uses RBX to return errors, but IDA thinks RBX never changes across function calls. Since RBX had a non-zero value right before calling os.Open, IDA assumed the error check would always fail and crash into a panic. Because of that, IDA treated the rest of the function as unreachable code and deleted it from the view.
+Once we NOP out the error jump at 0xF708B4, IDA stops panicking and decompiles the remaining parts cleanly.</strong></p>
+<p>We continue :</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="kr">__fastcall</span><span class="w"> </span><span class="o">***</span><span class="p">)(</span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">))(</span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">8L</span><span class="n">L</span><span class="p">))(</span>
+<span class="w">  </span><span class="mh">0x23ACB440B490A1BBLL</span><span class="p">,</span>
+<span class="w">  </span><span class="mf">4294967175L</span><span class="n">L</span><span class="p">,</span>
+<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">8L</span><span class="n">L</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="p">)</span><span class="n">byte_175A528</span><span class="p">,</span>
+<span class="w">  </span><span class="o">*</span><span class="p">((</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">off_175A550</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span><span class="w"> </span>
+<span class="n">v11</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_437E80</span><span class="p">();</span><span class="w">             </span>
+<span class="n">v117</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_F91FA0</span><span class="p">;</span><span class="w">           </span>
+<span class="n">v117</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v11</span><span class="p">;</span>
+<span class="n">v119</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">**</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="n">v117</span><span class="p">;</span>
+<span class="n">v90</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">sub_437580</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span><span class="w">             </span>
+</code></pre></div>
+
+<p>Is basically :</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">f</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">os</span><span class="p">.</span><span class="nx">Open</span><span class="p">(</span><span class="s">"hello.pyc"</span><span class="p">)</span>
+<span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">defer</span><span class="w"> </span><span class="nx">f</span><span class="p">.</span><span class="nx">Close</span><span class="p">()</span>
+
+<span class="nx">putewi</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="k">if</span><span class="w"> </span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">f</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">putewi</span><span class="p">);</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Cleaning up part :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">sub_449740</span><span class="p">();</span><span class="w">                         </span><span class="c1">// os.Remove("generator.py")</span>
+<span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">**</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span><span class="n">off_175A530</span><span class="p">[</span><span class="mi">0</span><span class="p">])();</span><span class="w"> </span><span class="c1">// decrypts "hello.pyc"</span>
+<span class="n">sub_449740</span><span class="p">();</span><span class="w">    </span>
+</code></pre></div>
+
+<p>Assembling the 16-Byte AES IV :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v89</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v1</span><span class="p">;</span>
+<span class="n">LODWORD</span><span class="p">(</span><span class="n">v89</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v90</span><span class="p">;</span><span class="w"> </span><span class="c1">// copy(storedIV[0:4], putewi)</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">__int128</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="o">*</span><span class="p">(</span><span class="kr">__int64</span><span class="w"> </span><span class="p">(</span><span class="kr">__fastcall</span><span class="w"> </span><span class="o">**</span><span class="p">)(</span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="n">_UNKNOWN</span><span class="w"> </span><span class="o">**</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="p">))</span><span class="n">off_175A570</span><span class="p">[</span><span class="mi">0</span><span class="p">])(</span>
+<span class="w">                   </span><span class="mi">1058650481</span><span class="p">,</span>
+<span class="w">                   </span><span class="o">*</span><span class="n">off_175A570</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="w">                   </span><span class="n">off_175A570</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="w">                   </span><span class="mf">4175496456L</span><span class="n">L</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="p">(</span><span class="kt">__int128</span><span class="w"> </span><span class="o">*</span><span class="p">)((</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">v89</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="n">sub_2ED180</span><span class="p">();</span><span class="w">     </span><span class="c1">// copy(storedIV[4:], staticSuffix)</span>
+</code></pre></div>
+
+<p>StaticSuffix exported dynamically :</p>
+<p>```{
+    0x18, 0x98, 0xAC, 0xBD,
+    0xFF, 0x55, 0x99, 0x00, 0x01, 0x33, 0x61, 0xFF,
+}</p>
+<div class="codehilite"><pre><span></span><code>Now the decrypting part :
+
+```c
+if ( v100 &gt; 0x20 )
+{
+  v12 = (_OWORD *)sub_2E7F20();
+}
+else
+{
+  v107[0] = v1;
+  v107[1] = v1;
+  v12 = v107;
+}
+v113 = v12;
+v13 = sub_2E7F20();
+v14 = 0;
+v15 = v100;
+v16 = v109;
+v17 = v113;
+while ( v15 &gt; v14 )
+{
+  *((_BYTE *)v17 + v14) = *(_BYTE *)(v16 + v14) ^ 5; // key[i] = storedKey[i] ^ 5
+  ++v14;
+}
+for ( j = 0; j &lt; 16; ++j )
+  *(_BYTE *)(v13 + j) = *((_BYTE *)&amp;v89 + j) ^ 5;   // iv[j] = storedIV[j] ^ 5
+v116 = v13;
+</code></pre></div>
+
+<p>Cleaner : </p>
+<div class="codehilite"><pre><span></span><code><span class="nx">key</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">storedKey</span><span class="p">))</span>
+<span class="nx">iv</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">storedIV</span><span class="p">))</span>
+
+<span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">storedKey</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">key</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="mh">0x05</span>
+<span class="p">}</span>
+<span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="p">,</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">range</span><span class="w"> </span><span class="nx">storedIV</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">iv</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">b</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="mh">0x05</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Next we initialize the cypher :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v19</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_47B780</span><span class="p">();</span><span class="w"> </span><span class="c1">// aes.NewCipher(key)</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v20</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="nl">LABEL_210</span><span class="p">:</span>
+<span class="w">  </span><span class="n">sub_2E5FE0</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v81</span><span class="p">);</span>
+<span class="w">  </span><span class="k">goto</span><span class="w"> </span><span class="n">LABEL_211</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">v112</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v15</span><span class="p">;</span>
+<span class="n">v103</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v19</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="p">)</span><span class="n">sub_F7D3E0</span><span class="p">()</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="n">v81</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_44CF00</span><span class="p">();</span><span class="w"> </span><span class="c1">// os.Exit(1)</span>
+</code></pre></div>
+
+<p>Then we decrypt the bytes.dat:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="n">qword_1744828</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xF</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="c1">// len(encryptedProgram) % 16 != 0</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">sub_2E5FE0</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v81</span><span class="p">);</span>
+<span class="w">  </span><span class="k">goto</span><span class="w"> </span><span class="n">LABEL_210</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">v21</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v112</span><span class="p">;</span>
+<span class="n">v84</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_45AB40</span><span class="p">(</span><span class="n">unk</span><span class="o">:</span><span class="w"> </span><span class="n">v81</span><span class="p">);</span><span class="w">       </span><span class="c1">// cipher.NewCBCDecrypter(block, iv)</span>
+<span class="n">v105</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v22</span><span class="p">;</span>
+<span class="n">v114</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v21</span><span class="p">;</span>
+<span class="n">v104</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qword_1744828</span><span class="p">;</span>
+<span class="n">v116</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_2E7F20</span><span class="p">();</span>
+<span class="n">v23</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kr">__int64</span><span class="p">)</span><span class="n">off_1744820</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="kr">__fastcall</span><span class="w"> </span><span class="o">**</span><span class="p">)(</span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">_QWORD</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="p">))(</span><span class="n">v105</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">32</span><span class="p">))(</span>
+<span class="w">  </span><span class="n">v104</span><span class="p">,</span>
+<span class="w">  </span><span class="n">off_1744820</span><span class="p">,</span>
+<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">v105</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">32</span><span class="p">),</span>
+<span class="w">  </span><span class="n">v104</span><span class="p">,</span>
+<span class="w">  </span><span class="n">qword_1744828</span><span class="p">,</span>
+<span class="w">  </span><span class="n">qword_1744830</span><span class="p">);</span><span class="w">                 </span><span class="c1">// mode.CryptBlocks(decryptedAES, encryptedProgram)</span>
+</code></pre></div>
+
+<p>Our lovely xor :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v24</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_2E7F20</span><span class="p">();</span>
+<span class="n">v25</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">v26</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">90</span><span class="p">;</span><span class="w"> </span><span class="c1">// xorKey = 0x5A</span>
+<span class="n">v27</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v104</span><span class="p">;</span>
+<span class="n">v28</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v116</span><span class="p">;</span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v25</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">v27</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">v23</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v26</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">v25</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v28</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">((</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="p">)</span><span class="n">v25</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">v25</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFFFFFF00</span><span class="p">));</span>
+<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">v24</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v25</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v26</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">v25</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">v28</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">v25</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v26</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">v25</span><span class="o">++</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="p">)</span><span class="n">v26</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="mh">0x33</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">v116</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v24</span><span class="p">;</span>
+</code></pre></div>
+
+<p>--&gt;&gt;</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">xorKey</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="kt">byte</span><span class="p">(</span><span class="mh">0x5A</span><span class="p">)</span>
+<span class="nx">program</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">decryptedAES</span><span class="p">))</span>
+<span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">decryptedAES</span><span class="p">);</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">program</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">decryptedAES</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="nx">xorKey</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="kt">byte</span><span class="p">(</span><span class="nx">i</span><span class="o">%</span><span class="mi">256</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">xorKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">byte</span><span class="p">(((</span><span class="kt">int</span><span class="p">(</span><span class="nx">xorKey</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">i</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="mh">0x33</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>Now the VM struct allocation + initialization :</p>
+<div class="codehilite"><pre><span></span><code><span class="n">v29</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">sub_2891A0</span><span class="p">();</span><span class="w">                                         </span><span class="c1">// runtime.newobject(VM)</span>
+<span class="n">v30</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v104</span><span class="p">;</span>
+<span class="n">v29</span><span class="p">[</span><span class="mi">16387</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v104</span><span class="p">;</span>
+<span class="n">v29</span><span class="p">[</span><span class="mi">16388</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v30</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">dword_1829740</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">v29</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">sub_2ECA40</span><span class="p">();</span>
+<span class="w">  </span><span class="n">v31</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v116</span><span class="p">;</span>
+<span class="w">  </span><span class="o">*</span><span class="n">v32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v116</span><span class="p">;</span>
+<span class="w">  </span><span class="n">v32</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v33</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">v31</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v116</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">*</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int64</span><span class="w"> </span><span class="o">*</span><span class="p">)((</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">stru_20010</span><span class="p">.</span><span class="n">r_offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">_QWORD</span><span class="p">)</span><span class="n">v29</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v31</span><span class="p">;</span><span class="w"> </span><span class="c1">// vm.program = program</span>
+<span class="n">v29</span><span class="p">[</span><span class="mh">0x4000</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w">                                                       </span><span class="c1">// vm.sp = -1</span>
+<span class="n">v29</span><span class="p">[</span><span class="mi">16385</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">                                                         </span><span class="c1">// vm.pc = 0</span>
+<span class="o">*</span><span class="p">(</span><span class="n">_WORD</span><span class="w"> </span><span class="o">*</span><span class="p">)((</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">stru_20028</span><span class="p">.</span><span class="n">r_offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">_QWORD</span><span class="p">)</span><span class="n">v29</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32513</span><span class="p">;</span><span class="w">        </span><span class="c1">// 32513 = 0x7F01 -&gt; running = 1, stackKey = 0x7F</span>
+<span class="o">*</span><span class="p">(</span><span class="n">_OWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)((</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">stru_20040</span><span class="p">.</span><span class="n">r_offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">_QWORD</span><span class="p">)</span><span class="n">v29</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v1</span><span class="p">;</span><span class="w">          </span><span class="c1">// vm.inputBuffer</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">dword_1829740</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">v29</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">sub_2ECA20</span><span class="p">();</span>
+<span class="w">  </span><span class="o">*</span><span class="n">v35</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v34</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">v111</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v29</span><span class="p">;</span>
+<span class="n">v29</span><span class="p">[</span><span class="mi">16391</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">qword_18291E0</span><span class="p">;</span>
+<span class="n">sub_F91EC0</span><span class="p">();</span>
+</code></pre></div>
+
+<p>Better :</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">vm</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">VM</span><span class="p">{</span>
+<span class="w">    </span><span class="nx">program</span><span class="p">:</span><span class="w">     </span><span class="nx">program</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">sp</span><span class="p">:</span><span class="w">          </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">pc</span><span class="p">:</span><span class="w">          </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">running</span><span class="p">:</span><span class="w">     </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">stackKey</span><span class="p">:</span><span class="w">    </span><span class="mh">0x7F</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">inputBuffer</span><span class="p">:</span><span class="w"> </span><span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>note:
+- sub_2891A0: runtime.newobject
+- 0x20000 (v29[0x4000]): vm.sp = -1
+- 0x20008 (v29[16385]): vm.pc = 0
+- 32513 (0x7F01): running = true (byte 0x01), stackKey = 0x7F</p>
+<p>And now the most important part :
+VM dispatcher &amp; BYTECODES :</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int8</span><span class="p">)</span><span class="n">sub_F7D3E0</span><span class="p">()</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="n">v82</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sub_44CF00</span><span class="p">();</span><span class="w"> </span><span class="c1">// os.Exit(1)</span>
+
+<span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kr">__int64</span><span class="p">)</span><span class="n">v111</span><span class="p">;</span><span class="w"> </span>
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">*</span><span class="p">((</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">stru_20028</span><span class="p">.</span><span class="n">r_offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">v37</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">131080</span><span class="p">);</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">131096</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="kt">signed</span><span class="w"> </span><span class="kr">__int64</span><span class="p">)</span><span class="n">v37</span><span class="w"> </span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="o">*</span><span class="p">((</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">stru_20028</span><span class="p">.</span><span class="n">r_offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span>
+<span class="w">    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">v38</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">131096</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="n">v37</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">v38</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="n">sub_2ECDE0</span><span class="p">();</span><span class="w"> </span>
+<span class="w">  </span><span class="n">v39</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">_BYTE</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">v37</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kr">__int64</span><span class="w"> </span><span class="o">*</span><span class="p">)((</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">stru_20010</span><span class="p">.</span><span class="n">r_offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">m</span><span class="p">));</span><span class="w"> </span>
+<span class="w">  </span><span class="o">*</span><span class="p">(</span><span class="n">_QWORD</span><span class="w"> </span><span class="o">*</span><span class="p">)(</span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">131080</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v37</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span>
+</code></pre></div>
+
+<p>FINALLY OUR SWITCH BLOCK !</p>
+<div class="codehilite"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="nx">AmIDebugged</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">os</span><span class="p">.</span><span class="nx">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// VM Loop Inlined</span>
+<span class="k">for</span><span class="w"> </span><span class="nx">vm</span><span class="p">.</span><span class="nx">running</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="nx">vm</span><span class="p">.</span><span class="nx">pc</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="nx">vm</span><span class="p">.</span><span class="nx">program</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">vm</span><span class="p">.</span><span class="nx">running</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">        </span><span class="k">break</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nx">opcode</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">vm</span><span class="p">.</span><span class="nx">program</span><span class="p">[</span><span class="nx">vm</span><span class="p">.</span><span class="nx">pc</span><span class="p">]</span>
+<span class="w">    </span><span class="nx">vm</span><span class="p">.</span><span class="nx">pc</span><span class="o">++</span>
+
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="nx">opcode</span><span class="w"> </span><span class="p">{</span>
+</code></pre></div>
+
+<p>Ok now i won't be going through every opcode translation and instead i'll just give the full summary table :</p>
+<p><img width="1382" height="771" loading="lazy" decoding="async" alt="upsie" src="/static/img/writeups/securinets-quals-2026/letmethink/6.png" />
+<img width="1382" height="771" loading="lazy" decoding="async" alt="upsie" src="/static/img/writeups/securinets-quals-2026/letmethink/7.png" />
+<img width="1375" height="316" loading="lazy" decoding="async" alt="upsie" src="/static/img/writeups/securinets-quals-2026/letmethink/8.png" /></p>
+<p>Now we know what the bytecodes do , we can write a vm descriptor , or just dynamically proceed to solve .
+By extracting the VM bytecode and analyzing the logic .
+Here is the descriptor i wrote :</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">opcodes</span> <span class="o">=</span><span class="p">{</span>
+    <span class="mh">0xA7</span><span class="p">:</span> <span class="s2">"OP_PUSH"</span><span class="p">,</span>
+    <span class="mh">0x3E</span><span class="p">:</span> <span class="s2">"OP_POP"</span><span class="p">,</span>
+    <span class="mh">0x7A</span><span class="p">:</span> <span class="s2">"OP_DUP"</span><span class="p">,</span>
+    <span class="mh">0xC1</span><span class="p">:</span> <span class="s2">"OP_SWAP"</span><span class="p">,</span>
+    <span class="mh">0x5B</span><span class="p">:</span> <span class="s2">"OP_ROT3"</span><span class="p">,</span>
+    <span class="mh">0x2D</span><span class="p">:</span> <span class="s2">"OP_OVER"</span><span class="p">,</span>
+    <span class="mh">0x91</span><span class="p">:</span> <span class="s2">"OP_TUCK"</span><span class="p">,</span>
+    <span class="mh">0x48</span><span class="p">:</span> <span class="s2">"OP_NIP"</span><span class="p">,</span>
+    <span class="mh">0x6F</span><span class="p">:</span> <span class="s2">"OP_ROT3R"</span><span class="p">,</span>
+    <span class="mh">0xF2</span><span class="p">:</span> <span class="s2">"OP_ADD"</span><span class="p">,</span>
+    <span class="mh">0x1B</span><span class="p">:</span> <span class="s2">"OP_SUB"</span><span class="p">,</span>
+    <span class="mh">0xD4</span><span class="p">:</span> <span class="s2">"OP_MUL"</span><span class="p">,</span>
+    <span class="mh">0x94</span><span class="p">:</span> <span class="s2">"OP_XOR"</span><span class="p">,</span>
+    <span class="mh">0xE3</span><span class="p">:</span> <span class="s2">"OP_AND"</span><span class="p">,</span>
+    <span class="mh">0x8C</span><span class="p">:</span> <span class="s2">"OP_OR"</span><span class="p">,</span>
+    <span class="mh">0x4A</span><span class="p">:</span> <span class="s2">"OP_NOT"</span><span class="p">,</span>
+    <span class="mh">0x6D</span><span class="p">:</span> <span class="s2">"OP_CMP_EQ"</span><span class="p">,</span>
+    <span class="mh">0xB8</span><span class="p">:</span> <span class="s2">"OP_CMP_LT"</span><span class="p">,</span>
+    <span class="mh">0x29</span><span class="p">:</span> <span class="s2">"OP_CMP_GT"</span><span class="p">,</span>
+    <span class="mh">0xC3</span><span class="p">:</span> <span class="s2">"OP_JMP"</span><span class="p">,</span>
+    <span class="mh">0x58</span><span class="p">:</span> <span class="s2">"OP_JZ"</span><span class="p">,</span>
+    <span class="mh">0xA2</span><span class="p">:</span> <span class="s2">"OP_JNZ"</span><span class="p">,</span>
+    <span class="mh">0xE1</span><span class="p">:</span> <span class="s2">"OP_INPUT"</span><span class="p">,</span>
+    <span class="mh">0x2F</span><span class="p">:</span> <span class="s2">"OP_PRINT"</span><span class="p">,</span>
+    <span class="mh">0x7E</span><span class="p">:</span> <span class="s2">"OP_PRINT_NUM"</span><span class="p">,</span>
+    <span class="mh">0x19</span><span class="p">:</span> <span class="s2">"OP_ENCRYPT_STACK"</span><span class="p">,</span>
+    <span class="mh">0xBF</span><span class="p">:</span> <span class="s2">"OP_MODIFY_CODE"</span><span class="p">,</span>
+    <span class="mh">0x55</span><span class="p">:</span> <span class="s2">"OP_SLEEP"</span><span class="p">,</span>
+    <span class="mh">0x77</span><span class="p">:</span> <span class="s2">"OP_OPAQUE_1"</span><span class="p">,</span>
+    <span class="mh">0x33</span><span class="p">:</span> <span class="s2">"OP_OPAQUE_2"</span><span class="p">,</span>
+    <span class="mh">0x00</span><span class="p">:</span> <span class="s2">"OP_HALT"</span><span class="p">,</span>
+    <span class="mh">0xD7</span><span class="p">:</span> <span class="s2">"OP_SHA256"</span><span class="p">,</span>
+    <span class="mh">0x4E</span><span class="p">:</span> <span class="s2">"OP_SUM_BYTES"</span><span class="p">,</span>
+    <span class="mh">0xB3</span><span class="p">:</span> <span class="s2">"OP_LSHIFT"</span><span class="p">,</span>
+    <span class="mh">0x9A</span><span class="p">:</span> <span class="s2">"OP_SLICE"</span>
+<span class="p">}</span>
+
+<span class="n">HAS_ARG</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0xA7</span><span class="p">,</span> <span class="mh">0xC3</span><span class="p">,</span> <span class="mh">0x58</span><span class="p">,</span> <span class="mh">0xA2</span><span class="p">}</span>
+
+<span class="n">testcode_path</span> <span class="o">=</span> <span class="s2">"../testcode.bin"</span>
+<span class="n">outputnoadr_path</span> <span class="o">=</span> <span class="s2">"floww.txt"</span>
+<span class="n">outputadr_path</span> <span class="o">=</span><span class="s2">"adrflow.txt"</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">testcode_path</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">testcode_path</span><span class="si">}</span><span class="s2"> not found."</span><span class="p">)</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">testcode_path</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outputadr_path</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">outputnoadr_path</span><span class="p">,</span><span class="s2">"w"</span><span class="p">)</span>
+    <span class="n">pc</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">pc</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">code</span><span class="p">[</span><span class="n">pc</span><span class="p">]</span>
+        <span class="n">addr</span> <span class="o">=</span> <span class="n">pc</span>
+        <span class="n">pc</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">line</span> <span class="o">=</span> <span class="s2">""</span>
+        <span class="n">noadr_line</span><span class="o">=</span><span class="s2">""</span>
+        <span class="k">if</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">opcodes</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">opcodes</span><span class="p">[</span><span class="n">op</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">HAS_ARG</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pc</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">code</span><span class="p">):</span>
+                    <span class="n">arg</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">"&lt;i"</span><span class="p">,</span> <span class="n">code</span><span class="p">[</span><span class="n">pc</span><span class="p">:</span><span class="n">pc</span><span class="o">+</span><span class="mi">4</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">pc</span> <span class="o">+=</span> <span class="mi">4</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+                    <span class="n">noadr_line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> args"</span>
+                    <span class="n">noadr_line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> args"</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+                <span class="n">noadr_line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="si">}</span><span class="s2">: UNKNOWN (</span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span>
+            <span class="n">noadr_line</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"UNKNOWN (</span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="si">}</span><span class="s2">)"</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">noadr_line</span><span class="o">+</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Disassembly without addresses saved to </span><span class="si">{</span><span class="n">outputnoadr_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Disassembly with addresses saved to </span><span class="si">{</span><span class="n">outputadr_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+
+<p>By going through the result u'll notice that the VM is just doing this : 
+- Checks wether the input is 56 characters long or not.
+- The entire key schedule depends only on the first 11 characters of the flag (Securinets{):
+  * a = sum(flag[0:11])
+  * b = ((a &lt;&lt; 3) ^ 0x67) &amp; 0xFFFFFFFF
+  * c = sum(sha256(b)) &amp; 0xFFFFFFFF
+  * d = d = (c &lt;&lt; 2) &amp; 0xFFFFFFFF
+  * e = sum(sha256(d)) &amp; 0xFFFFFFFF
+- Each character at index i is transformed through five XOR operations and compared with an expected encrypted byte array:
+enc[i] = input[i] ^ prefix[i % 11] ^ (b &amp; 0xFF) ^ (c &amp; 0xFF) ^ (d &amp; 0xFF) ^ (e &amp; 0xFF)</p>
+<p>Damn it , i could've made the encryption part way harder , right ? xd </p>
+<p>Let's go through a summary before i throw the solver here :</p>
+<p>So The binary takes embedded data (random.dat), decrypts it via a 2-byte repeating XOR key (0xD3, 0xAD), and drops it to disk as generator.py. It then executes it via python3 generator.py.
+The execution of generator.py produces a compiled hello.pyc. The binary immediately opens hello.pyc, reads the first 4 bytes—which represent the Python bytecode magic number and deletes both generator.py and hello.pyc.
+So the first env check is finding the correct python version , u can bruteforce they are not many lol , and it's <strong>3.12</strong> so if the target machine runs an incompatible Python version, the magic number changes, the IV becomes incorrect, and the subsequent bytecode decryption produces garbage and that's what happened when we tried running the first time ! even typing 'letmethink' ( which is the correct word ) won't help .
+These python magic numbers are prepended to a 12-byte hardcoded suffix to form the 16-byte AES-128-CBC IV.
+And then we have a Two-Stage VM Bytecode Decryption:
+With the IV recovered and the hardcoded 16-byte key decrypted (storedKey ^ 0x05), the program decrypts bytes.dat.
+- Stage 1 (AES-128-CBC): Decrypts the raw payload using the Python-derived IV and key.
+- Stage 2 (Dynamic Stream-XOR): Decrypts the CBC output using an evolving rolling-key XOR (xorKey = 0x5A, mutated every iteration with ((xorKey + i) ^ 0x33) and byte(i % 256)).</p>
+<p>Finally, the vm thing ( we just explained :c )</p>
+<p>Here is the solver and i hope you enjoyed ! </p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">struct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
+
+<span class="c1"># target ciphertext extracted from the VM bytecode</span>
+<span class="n">enc</span> <span class="o">=</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span>
+    <span class="s2">"6b6b6b6b6b6b6b6b6b6b6b0d6c69782936606f2829760a686b7a2e313c3c792d2501366b7a2c3b6138287976093f3d2c783437687d282845"</span>
+<span class="p">)</span>
+
+<span class="n">prefix</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"Securinets{"</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">prefix</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">^</span> <span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span><span class="p">)</span> <span class="o">^</span> <span class="mh">0x67</span>
+<span class="n">c</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">"&lt;I"</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">())</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
+<span class="n">e</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">"&lt;I"</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span><span class="o">.</span><span class="n">digest</span><span class="p">())</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFF</span>
+
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">^</span> <span class="n">c</span> <span class="o">^</span> <span class="n">d</span> <span class="o">^</span> <span class="n">e</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
+
+<span class="n">flag</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">enc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^</span> <span class="n">mask</span> <span class="o">^</span> <span class="n">prefix</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="mi">11</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">enc</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">flag</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+</code></pre></div>
+    </div>
+  </div>
+</article>
+<div class="edge" aria-hidden="true"></div>
+
+  </main>
+  <footer class="graph">
+  <div class="block block-end">
+    <div class="block-head"><span class="addr">.text:00401F00</span><span class="sym">sub_farewell</span><span class="flag">noreturn</span></div>
+    <div class="block-body">
+      <span class="retn">retn</span> &nbsp;; Adem Kefi (blackkader)
+    </div>
+  </div>
+  
+  <nav class="social-row" aria-label="Contact and social links">
+    
+  <a class="social-icon" href="https://www.linkedin.com/in/kefi-adem-62019a241/" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: #0A66C2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="https://github.com/Blackkader" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--head);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+
+  
+  <a class="social-icon" href="https://discord.com/users/376381309817192448" target="_blank" rel="noopener" aria-label="Discord" style="color: #5865F2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="mailto:adem.kefi@insat.ucar.tn" aria-label="Email" style="color: var(--label);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+  </nav>
+</footer>
+  <div class="statusbar" aria-hidden="true">
+    <span class="st-idle">&#9679; AU: idle</span>
+    <span class="st-hide">Down</span>
+    <span class="st-hide" data-xref-toggle>X: show clickables</span>
+    <span class="st-hide">Disk: 42GB</span>
+    <span class="st-right">
+      <span class="st-addr" data-st-addr>.text:00401000</span>
+      <span class="st-sym" data-st-sym>start</span>
+    </span>
+  </div>
+  <script type="application/json" id="site-index">[{"k": "ctf", "t": "Securinets CTF Quals", "u": "/posts/securinets-quals-2026"}, {"c": "Securinets CTF Quals", "k": "writeup", "t": "Revenant", "u": "/posts/securinets-quals-2026/revenant"}, {"c": "Securinets CTF Quals", "k": "writeup", "t": "Letmethink", "u": "/posts/securinets-quals-2026/letmethink"}, {"k": "ctf", "t": "DarkestHour", "u": "/posts/darkesthour"}, {"c": "DarkestHour", "k": "writeup", "t": "Obfer", "u": "/posts/darkesthour/obfer"}, {"k": "ctf", "t": "Summerrush", "u": "/posts/summerrush"}, {"c": "Summerrush", "k": "writeup", "t": "Adventure Time", "u": "/posts/summerrush/adventuretime"}, {"c": "Summerrush", "k": "writeup", "t": "Hoogments", "u": "/posts/summerrush/hoogments"}, {"c": "Summerrush", "k": "writeup", "t": "Pyshell", "u": "/posts/summerrush/pyshell"}, {"k": "ctf", "t": "Securinets Friendly", "u": "/posts/securinets-friendly"}, {"c": "Securinets Friendly", "k": "writeup", "t": "DynamicIntro", "u": "/posts/securinets-friendly/dynamic-intro"}, {"c": "Securinets Friendly", "k": "writeup", "t": "ExportedActivity", "u": "/posts/securinets-friendly/exported-activity"}, {"c": "Securinets Friendly", "k": "writeup", "t": "IntentHandler", "u": "/posts/securinets-friendly/intent-handler"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Irreversible", "u": "/posts/securinets-friendly/irreversible"}, {"c": "Securinets Friendly", "k": "writeup", "t": "LoginMaster", "u": "/posts/securinets-friendly/login-master"}, {"c": "Securinets Friendly", "k": "writeup", "t": "LoginMaster2", "u": "/posts/securinets-friendly/login-master-2"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Meoww", "u": "/posts/securinets-friendly/meoww"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Native1", "u": "/posts/securinets-friendly/native-1"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Native2", "u": "/posts/securinets-friendly/native-2"}, {"c": "Securinets Friendly", "k": "writeup", "t": "RollTheDice", "u": "/posts/securinets-friendly/roll-the-dice"}, {"c": "Securinets Friendly", "k": "writeup", "t": "SecretDigger", "u": "/posts/securinets-friendly/secret-digger"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Tricky", "u": "/posts/securinets-friendly/tricky"}, {"c": "Securinets Friendly", "k": "writeup", "t": "UnexportedActivity", "u": "/posts/securinets-friendly/unexported-activity"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Welcome", "u": "/posts/securinets-friendly/welcome"}, {"k": "ctf", "t": "FL1TZ x Securinets Mini-CTF", "u": "/posts/fl1tz-x-securinets-mini-ctf"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Anderouid", "u": "/posts/fl1tz-x-securinets-mini-ctf/anderouid"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Hexer", "u": "/posts/fl1tz-x-securinets-mini-ctf/hexer"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Magic", "u": "/posts/fl1tz-x-securinets-mini-ctf/magic"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Maze1", "u": "/posts/fl1tz-x-securinets-mini-ctf/maze1"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Maze2", "u": "/posts/fl1tz-x-securinets-mini-ctf/maze2"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Naggez", "u": "/posts/fl1tz-x-securinets-mini-ctf/naggez"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Oid", "u": "/posts/fl1tz-x-securinets-mini-ctf/oid"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Serialo", "u": "/posts/fl1tz-x-securinets-mini-ctf/serialo"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Stringz", "u": "/posts/fl1tz-x-securinets-mini-ctf/stringz"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "X0r", "u": "/posts/fl1tz-x-securinets-mini-ctf/x0r"}]</script>
+  
+  <script src="/static/js/main.js?v=1793310743" defer></script>
+  <script src="/static/js/nav.js?v=1793310743" defer></script>
+  <script src="/static/js/lightbox.js?v=1793310743" defer></script>
+  <script src="/static/js/minimap.js?v=1793310743" defer></script>
+  <script src="/static/js/palette.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient_e33.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient_re.js?v=1793310743" defer></script>
+  <script src="/static/js/cursor.js?v=1793310743" defer></script>
+</body>
+</html>

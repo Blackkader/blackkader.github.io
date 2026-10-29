@@ -1,0 +1,132 @@
+/* Custom cursors: one per theme.
+   The animated versions (cursor.js) hide the native cursor and draw their own;
+   the static ones below are the fallback (reduced motion, touch, or no JavaScript). */
+
+/* Theme 1: debugger reticle */
+:root:not([data-theme]) { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Ccircle cx='16' cy='16' r='9' stroke='%23000' stroke-opacity='.7' stroke-width='4.2'/%3E%3Cpath d='M16 2v6M16 24v6M2 16h6M24 16h6' stroke='%23000' stroke-opacity='.7' stroke-width='4.2'/%3E%3Ccircle cx='16' cy='16' r='9' stroke='%23e0a45c' stroke-width='2'/%3E%3Cpath d='M16 2v6M16 24v6M2 16h6M24 16h6' stroke='%23f5ead6' stroke-width='2'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23e0a45c' stroke='%23000' stroke-width='1.4'/%3E%3C/svg%3E") 16 16, auto; }
+:root:not([data-theme]) :is(a[href], button, summary, [role="button"], .copy-btn, [data-theme-toggle]) { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke-linecap='square'%3E%3Cpath d='M5 11V5h6M21 5h6v6M27 21v6h-6M11 27H5v-6' stroke='%23000' stroke-opacity='.8' stroke-width='5'/%3E%3Cpath d='M5 11V5h6M21 5h6v6M27 21v6h-6M11 27H5v-6' stroke='%23e0a45c' stroke-width='2.6'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='4.2' fill='%23b8423a' stroke='%23f5ead6' stroke-width='1.6'/%3E%3C/svg%3E") 16 16, pointer; }
+/* Theme 2: sunburst diamond */
+:root[data-theme="deco"] { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M16 3L29 16L16 29L3 16Z' fill='none' stroke='%23000' stroke-opacity='.75' stroke-width='5'/%3E%3Cpath d='M16 3L29 16L16 29L3 16Z' fill='none' stroke='%23e0b25a' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23f6e8c8' stroke='%23000' stroke-width='1.2'/%3E%3C/svg%3E") 16 16, auto; }
+:root[data-theme="deco"] :is(a[href], button, summary, [role="button"], .copy-btn, [data-theme-toggle]) { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M24.0 16.0L31.0 16.0M23.4 19.1L27.1 20.6M21.7 21.7L26.6 26.6M19.1 23.4L20.6 27.1M16.0 24.0L16.0 31.0M12.9 23.4L11.4 27.1M10.3 21.7L5.4 26.6M8.6 19.1L4.9 20.6M8.0 16.0L1.0 16.0M8.6 12.9L4.9 11.4M10.3 10.3L5.4 5.4M12.9 8.6L11.4 4.9M16.0 8.0L16.0 1.0M19.1 8.6L20.6 4.9M21.7 10.3L26.6 5.4M23.4 12.9L27.1 11.4' fill='none' stroke='%23000' stroke-opacity='.75' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M24.0 16.0L31.0 16.0M23.4 19.1L27.1 20.6M21.7 21.7L26.6 26.6M19.1 23.4L20.6 27.1M16.0 24.0L16.0 31.0M12.9 23.4L11.4 27.1M10.3 21.7L5.4 26.6M8.6 19.1L4.9 20.6M8.0 16.0L1.0 16.0M8.6 12.9L4.9 11.4M10.3 10.3L5.4 5.4M12.9 8.6L11.4 4.9M16.0 8.0L16.0 1.0M19.1 8.6L20.6 4.9M21.7 10.3L26.6 5.4M23.4 12.9L27.1 11.4' fill='none' stroke='%23e0b25a' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M16 8L24 16L16 24L8 16Z' fill='%23e0b25a' stroke='%23000' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2' fill='%23f6e8c8'/%3E%3C/svg%3E") 16 16, pointer; }
+/* Theme 3: petal / flower */
+:root[data-theme="e33"] { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M3 3C12 4 25 12 25 24C14 25 5 14 3 3Z' fill='%23d9453f' stroke='%23e8d08a' stroke-width='1.3' stroke-linejoin='round'/%3E%3Cpath d='M5 5C12 11 18 17 22 23' stroke='%23f3e6bf' stroke-opacity='.6' fill='none'/%3E%3C/svg%3E") 3 3, auto; }
+:root[data-theme="e33"] :is(a[href], button, summary, [role="button"], .copy-btn, [data-theme-toggle]) { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cellipse cx='16' cy='8' rx='4.2' ry='7.2' transform='rotate(0 16 16)' fill='%23d9453f' stroke='%23e8d08a' stroke-width='1'/%3E%3Cellipse cx='16' cy='8' rx='4.2' ry='7.2' transform='rotate(72 16 16)' fill='%23d9453f' stroke='%23e8d08a' stroke-width='1'/%3E%3Cellipse cx='16' cy='8' rx='4.2' ry='7.2' transform='rotate(144 16 16)' fill='%23d9453f' stroke='%23e8d08a' stroke-width='1'/%3E%3Cellipse cx='16' cy='8' rx='4.2' ry='7.2' transform='rotate(216 16 16)' fill='%23d9453f' stroke='%23e8d08a' stroke-width='1'/%3E%3Cellipse cx='16' cy='8' rx='4.2' ry='7.2' transform='rotate(288 16 16)' fill='%23d9453f' stroke='%23e8d08a' stroke-width='1'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23e8d08a'/%3E%3C/svg%3E") 16 16, pointer; }
+
+/* ---------- animated cursor ---------- */
+html.cursor-fx, html.cursor-fx * { cursor: none !important; }
+
+#cursor-fx {
+  position: fixed; left: 0; top: 0; width: 0; height: 0;
+  z-index: 2147483647; pointer-events: none;
+  opacity: 0; transition: opacity 0.25s ease;
+}
+#cursor-fx.on { opacity: 1; }
+#cursor-fx.instant { transition: none; }   /* after a page change the ring is drawn at once, not faded in */
+#cursor-fx .cur-ring, #cursor-fx .cur-dot { position: absolute; left: 0; top: 0; will-change: transform; }
+#cursor-fx svg { position: absolute; overflow: visible; transition: transform 0.2s ease; }
+#cursor-fx .cur-ring svg { left: -30px; top: -30px; width: 60px; height: 60px; }
+#cursor-fx .cur-dot svg { left: -20px; top: -20px; width: 40px; height: 40px; }
+#cursor-fx.is-down .cur-ring svg { transform: scale(0.72); }
+#cursor-trail { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2147483100; }   /* above the page-change cover (2147483000), so the click burst shows during a transition */
+
+@keyframes cur-spin { to { transform: rotate(360deg); } }
+#cursor-fx .cur-spin { transform-box: fill-box; transform-origin: center; animation: cur-spin 9s linear infinite; }
+#cursor-fx .fb { transform-box: fill-box; transform-origin: center; }
+
+/* theme 1: debugger reticle */
+#cursor-fx[data-cur="ember"] .e-brackets { opacity: 0; transform: scale(1.45); transition: opacity 0.18s ease, transform 0.2s cubic-bezier(.3,1.5,.5,1); }
+#cursor-fx[data-cur="ember"].is-link .e-brackets { opacity: 1; transform: scale(1); }
+#cursor-fx[data-cur="ember"] .e-ticks { transition: transform 0.2s ease, opacity 0.2s ease; }
+#cursor-fx[data-cur="ember"].is-link .e-ticks { transform: scale(0.55); opacity: 0.3; }
+#cursor-fx[data-cur="ember"] .e-dashed { transition: opacity 0.2s ease; }
+#cursor-fx[data-cur="ember"].is-link .e-dashed { opacity: 0; }
+#cursor-fx[data-cur="ember"] .e-core { transition: transform 0.18s cubic-bezier(.3,1.6,.5,1), fill 0.15s ease; }
+#cursor-fx[data-cur="ember"].is-link .e-core { transform: scale(1.9); fill: var(--red); }
+#cursor-fx[data-cur="ember"] svg { filter: drop-shadow(0 0 4px var(--addr)) drop-shadow(0 0 1px #000); }
+#cursor-fx[data-cur="ember"] .cur-label {
+  position: absolute; left: 24px; top: 14px; white-space: nowrap;
+  font: 700 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.04em;
+  color: var(--head); padding: 3px 6px;
+  background: color-mix(in srgb, var(--bar) 88%, transparent);
+  border: 1px solid var(--addr); border-left-width: 3px;
+  opacity: 0; transition: opacity 0.15s ease;            /* only shown while over something clickable */
+}
+#cursor-fx[data-cur="ember"].is-link .cur-label { opacity: 1; }
+#cursor-fx[data-cur="ember"].is-link .cur-label { color: var(--label); border-color: var(--label); }
+
+/* theme 2: sunburst diamond */
+#cursor-fx[data-cur="deco"] svg { filter: drop-shadow(0 0 4px var(--label)) drop-shadow(0 0 1px #000); }
+#cursor-fx[data-cur="deco"] .d-burst { transition: transform 0.25s cubic-bezier(.3,1.5,.5,1); transform-box: fill-box; transform-origin: center; }
+#cursor-fx[data-cur="deco"].is-link .d-burst { transform: scale(1.35); }
+#cursor-fx[data-cur="deco"].is-link .d-spin { animation-duration: 1.6s; }
+#cursor-fx[data-cur="deco"] .d-diamond { fill: transparent; transition: transform 0.3s cubic-bezier(.3,1.6,.5,1), fill 0.2s ease; transform-box: fill-box; transform-origin: center; }
+#cursor-fx[data-cur="deco"].is-link .d-diamond { fill: var(--label); transform: rotate(90deg) scale(1.4); }
+
+/* theme 3: brush petal that blooms */
+#cursor-fx[data-cur="e33"] svg { filter: drop-shadow(0 0 3px var(--red)) drop-shadow(0 0 1px #000); }
+#cursor-fx[data-cur="e33"] .p-petal { transition: opacity 0.18s ease; }
+#cursor-fx[data-cur="e33"].is-link .p-petal { opacity: 0; }
+#cursor-fx[data-cur="e33"] .p-flower { opacity: 0; transform: scale(0.25) rotate(-80deg); transition: opacity 0.18s ease, transform 0.3s cubic-bezier(.3,1.6,.5,1); }
+#cursor-fx[data-cur="e33"].is-link .p-flower { opacity: 1; transform: scale(1) rotate(0deg); }
+#cursor-fx[data-cur="e33"].is-link .p-ring { opacity: 0.9; transform: scale(1.25); }
+#cursor-fx[data-cur="e33"] .p-ring { transform-box: fill-box; transform-origin: center; transition: transform 0.25s ease, opacity 0.2s ease; }
+
+/* ---------- IDA, Ghidra and Binary Ninja: static fallbacks (no JavaScript, reduced motion, touch) ---------- */
+:root[data-theme="ida"] { cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%3E%3Cpath%20d='M3%203L3%2025L8.8%2019.8L13.2%2029.4L17.8%2027.3L13.4%2017.8L20.8%2017.4Z'%20fill='%23f3c800'%20stroke='%231b2231'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/svg%3E") 3 3, auto; }
+:root[data-theme="ida"] :is(a[href], button, summary, [role="button"], .copy-btn, [data-theme-toggle], [data-cursor-toggle], [data-xref-toggle]) { cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='9'%20y='9'%20width='20'%20height='14'%20rx='1.5'%20fill='%23fff8d0'%20fill-opacity='.7'%20stroke='%23e8a800'%20stroke-width='2'/%3E%3Cpath%20d='M3%203L3%2025L8.8%2019.8L13.2%2029.4L17.8%2027.3L13.4%2017.8L20.8%2017.4Z'%20fill='%23f3c800'%20stroke='%231b2231'%20stroke-width='1.8'%20stroke-linejoin='round'/%3E%3C/svg%3E") 3 3, pointer; }
+:root[data-theme="ghidra"] { cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='15'%20y='5'%20width='2.4'%20height='22'%20fill='%23ffb74d'/%3E%3Cpath%20d='M11%205.5h10M11%2026.5h10'%20stroke='%23ffb74d'%20stroke-width='2'/%3E%3C/svg%3E") 16 16, auto; }
+:root[data-theme="ghidra"] :is(a[href], button, summary, [role="button"], .copy-btn, [data-theme-toggle], [data-cursor-toggle], [data-xref-toggle]) { cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%3E%3Cpath%20d='M5%209h6M5%209v6M27%209h-6M27%209v6M5%2023h6M5%2023v-6M27%2023h-6M27%2023v-6'%20fill='none'%20stroke='%2387cefa'%20stroke-width='2.4'/%3E%3Crect%20x='15'%20y='10'%20width='2.4'%20height='12'%20fill='%23ffb74d'/%3E%3C/svg%3E") 16 16, pointer; }
+:root[data-theme="binja"] { cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%3E%3Ccircle%20cx='16'%20cy='16'%20r='9.5'%20fill='none'%20stroke='%23141414'%20stroke-opacity='.7'%20stroke-width='4'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='9.5'%20fill='none'%20stroke='%23a0ceee'%20stroke-width='2'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='3.2'%20fill='%23fff'%20stroke='%23141414'%20stroke-width='1.4'/%3E%3C/svg%3E") 16 16, auto; }
+:root[data-theme="binja"] :is(a[href], button, summary, [role="button"], .copy-btn, [data-theme-toggle], [data-cursor-toggle], [data-xref-toggle]) { cursor: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%3E%3Crect%20x='6'%20y='6'%20width='20'%20height='20'%20rx='5'%20fill='%23a0ceee'%20fill-opacity='.18'%20stroke='%23141414'%20stroke-opacity='.7'%20stroke-width='4'/%3E%3Crect%20x='6'%20y='6'%20width='20'%20height='20'%20rx='5'%20fill='none'%20stroke='%23a0ceee'%20stroke-width='2'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='3.2'%20fill='%23fff'%20stroke='%23141414'%20stroke-width='1.4'/%3E%3C/svg%3E") 16 16, pointer; }
+
+/* ---------- animated cursors for the three reverse-engineering themes (cursor.js) ---------- */
+#cursor-fx[data-cur="ida"] svg, #cursor-fx[data-cur="ghidra"] svg, #cursor-fx[data-cur="binja"] svg { overflow: visible; }
+
+/* IDA: the yellow arrow of the navigation band, and the dashed outline of a selected node */
+#cursor-fx[data-cur="ida"] .i-arrow { fill: #f3c800; stroke: #1b2231; stroke-width: 1.7; stroke-linejoin: round; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.45));
+  transform-box: fill-box; transform-origin: 0 0; transition: transform 0.2s cubic-bezier(.3,1.6,.5,1), fill 0.15s ease; }
+#cursor-fx[data-cur="ida"].is-link .i-arrow { fill: #ffe45e; transform: rotate(-14deg) scale(1.12); }
+#cursor-fx[data-cur="ida"] .i-box { fill: rgba(243, 200, 0, 0.07); stroke: var(--hover); stroke-width: 1.5; stroke-dasharray: 4 3; animation: ida-march 0.9s linear infinite;
+  transform-box: fill-box; transform-origin: center; transition: transform 0.22s cubic-bezier(.3,1.5,.5,1), fill 0.15s ease, stroke-width 0.15s ease; }
+@keyframes ida-march { to { stroke-dashoffset: -7; } }
+#cursor-fx[data-cur="ida"].is-link .i-box { stroke-dasharray: none; stroke-width: 2.4; fill: rgba(243, 200, 0, 0.16); transform: scale(1.18, 1.3); animation: none; }
+#cursor-fx[data-cur="ida"] .i-edges path { fill: none; stroke-width: 2.6; stroke-linecap: square; opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity 0.15s ease, transform 0.22s cubic-bezier(.3,1.5,.5,1); }
+#cursor-fx[data-cur="ida"] .i-g { stroke: var(--green); } #cursor-fx[data-cur="ida"] .i-r { stroke: var(--red); } #cursor-fx[data-cur="ida"] .i-b { stroke: var(--blue); }
+#cursor-fx[data-cur="ida"].is-link .i-edges path { opacity: 1; transform: scale(1.18, 1.3); }
+#cursor-fx[data-cur="ida"] .cur-label { position: absolute; left: 24px; top: 20px; white-space: nowrap; font: 600 11px/1 "Source Code Pro", ui-monospace, monospace; color: #1b2231;
+  padding: 3px 7px; background: #fffbe6; border: 1px solid #c9a600; border-left: 3px solid #e8a800; box-shadow: 0 2px 6px rgba(20, 30, 60, 0.22); opacity: 0; transition: opacity 0.15s ease; }
+#cursor-fx[data-cur="ida"].is-link .cur-label { opacity: 1; }
+
+/* Ghidra: the Listing's text caret and the outline of a selected field */
+#cursor-fx[data-cur="ghidra"] .g-caret { fill: #ffb74d; animation: g-blink 1.1s steps(1) infinite; }
+#cursor-fx[data-cur="ghidra"] .g-serif { fill: none; stroke: #ffb74d; stroke-width: 1.7; }
+@keyframes g-blink { 0%, 62% { opacity: 1; } 63%, 100% { opacity: 0.12; } }
+#cursor-fx[data-cur="ghidra"] svg { filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.9)); }
+#cursor-fx[data-cur="ghidra"] .g-box { fill: rgba(135, 206, 250, 0.06); stroke: rgba(135, 206, 250, 0.5); stroke-width: 1; stroke-dasharray: 1 2.6; transform-box: fill-box; transform-origin: center;
+  transition: transform 0.2s cubic-bezier(.3,1.5,.5,1), fill 0.15s ease, stroke 0.15s ease; }
+#cursor-fx[data-cur="ghidra"] .g-ticks { fill: none; stroke: #87cefa; stroke-width: 1.8; stroke-linecap: square; transform-box: fill-box; transform-origin: center; transition: transform 0.2s cubic-bezier(.3,1.5,.5,1); }
+#cursor-fx[data-cur="ghidra"].is-link .g-box { fill: rgba(75, 110, 175, 0.3); stroke: #87cefa; stroke-dasharray: none; transform: scale(1.3, 1.1); }
+#cursor-fx[data-cur="ghidra"].is-link .g-ticks { transform: scale(1.3, 1.1); }
+#cursor-fx[data-cur="ghidra"] .cur-label { position: absolute; left: 22px; top: 18px; white-space: nowrap; font: 600 11px/1 "IBM Plex Mono", ui-monospace, monospace; color: #e9e9e9;
+  padding: 3px 7px; background: #313335; border: 1px solid #515455; border-left: 3px solid #70c070; opacity: 0; transition: opacity 0.15s ease; }
+#cursor-fx[data-cur="ghidra"].is-link .cur-label { opacity: 1; }
+
+/* Binary Ninja: a pastel target, and a cross-reference tag */
+#cursor-fx[data-cur="binja"] svg { filter: drop-shadow(0 0 4px rgba(160, 206, 238, 0.45)) drop-shadow(0 0 1px #000); }
+#cursor-fx[data-cur="binja"] .b-sq { fill: rgba(160, 206, 238, 0.05); stroke: rgba(160, 206, 238, 0.6); stroke-width: 1.4; transform-box: fill-box; transform-origin: center;
+  transition: transform 0.24s cubic-bezier(.3,1.5,.5,1), fill 0.15s ease, stroke 0.15s ease, stroke-width 0.15s ease; }
+#cursor-fx[data-cur="binja"] .b-dots circle { transform-box: fill-box; transform-origin: center; transition: transform 0.24s cubic-bezier(.3,1.5,.5,1); }
+#cursor-fx[data-cur="binja"] .b1 { fill: var(--bn-acai); } #cursor-fx[data-cur="binja"] .b2 { fill: var(--bn-lime); }
+#cursor-fx[data-cur="binja"] .b3 { fill: var(--bn-cherry); } #cursor-fx[data-cur="binja"] .b4 { fill: var(--bn-tangerine); }
+#cursor-fx[data-cur="binja"] .b-core { fill: #fff; stroke: #141414; stroke-width: 1.4; }
+#cursor-fx[data-cur="binja"] .b-halo { fill: none; stroke: var(--bn-acai); stroke-width: 1.4; opacity: 0.7; transform-box: fill-box; transform-origin: center; transition: transform 0.24s ease, opacity 0.2s ease; }
+#cursor-fx[data-cur="binja"].is-link .b-sq { fill: rgba(160, 206, 238, 0.13); stroke: var(--bn-acai); stroke-width: 2.2; transform: scale(1.32); }
+#cursor-fx[data-cur="binja"].is-link .b-dots circle { transform: scale(1.4); }
+#cursor-fx[data-cur="binja"].is-link .b-halo { transform: scale(1.7); opacity: 0.35; }
+#cursor-fx[data-cur="binja"] .cur-label { position: absolute; left: 26px; top: 20px; white-space: nowrap; font: 500 11px/1 "Roboto Mono", ui-monospace, monospace; color: #e0e0e0;
+  padding: 4px 8px; background: #242424; border: 1px solid #3d3d3d; border-left: 3px solid #a0ceee; border-radius: 2px; opacity: 0; transition: opacity 0.15s ease; }
+#cursor-fx[data-cur="binja"].is-link .cur-label { opacity: 1; }
+
+/* Switched off by the visitor: the normal system cursor, everywhere (these beat the static fallback cursors above). */
+html.no-cursor, html.no-cursor * { cursor: auto !important; }
+html.no-cursor :is(a[href], button, summary, [role="button"], .copy-btn, [data-theme-toggle], [data-cursor-toggle], [data-xref-toggle]) { cursor: pointer !important; }

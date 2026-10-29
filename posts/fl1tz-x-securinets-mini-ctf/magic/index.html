@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-dIZvJ8DqW/1X4y0O6aI5UPABQELt1l2BTHohK5HWvVE=' 'sha256-9HHnGVC497OjgOFzxn/+mDm2PxMkGmqK0aKJxMa9a48='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Magic</title>
+  <meta name="description" content="A lost expeditioner.">
+  <meta property="og:title" content="Adem Kefi">
+  <meta property="og:description" content="A lost expeditioner.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <script>
+    // Apply the saved theme before first paint, and start fetching that theme's main font right away.
+    // IDA Dark is the default (IDA's two tones share data-theme="ida"); "ember" (older visits stored "ida_dark") is Ember & Ash, which has no data-theme.
+    var t = "ida", tone = "dark";
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "ember" || saved === "ida_dark") { t = "ember"; tone = ""; }
+      else if (saved === "deco" || saved === "e33" || saved === "ghidra" || saved === "binja") { t = saved; tone = ""; }
+      else if (saved === "ida") tone = "";
+    } catch (e) {}
+    if (t !== "ember") document.documentElement.setAttribute("data-theme", t);
+    if (tone) document.documentElement.setAttribute("data-tone", tone);
+    try {
+      if (localStorage.getItem("cursor") === "off") document.documentElement.classList.add("no-cursor");
+      var m = localStorage.getItem("motion"), nv = navigator, lowEnd = (nv.connection && nv.connection.saveData) || (nv.deviceMemory && nv.deviceMemory <= 2) || (nv.hardwareConcurrency && nv.hardwareConcurrency <= 2);
+      if (m === "off" || (m === null && lowEnd)) document.documentElement.classList.add("no-motion");
+    } catch (e) {}
+    var mainFont = { deco: "lora-latin-1ace0d36", e33: "eb-garamond-latin-ef73a8c5", ida: "source-code-pro-latin-a51a4f54",
+                     ghidra: "ibm-plex-mono-400-latin-97032920", binja: "roboto-mono-latin-195cc3f2" }[t] || "jetbrains-mono-latin-0a7197f9";
+    var pre = document.createElement("link");
+    pre.rel = "preload"; pre.as = "font"; pre.type = "font/woff2"; pre.crossOrigin = "anonymous";
+    pre.href = "/static/fonts/" + mainFont + ".woff2";
+    document.head.appendChild(pre);
+  </script>
+  <link rel="stylesheet" href="/static/css/fonts.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/pygments.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/style.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/themes_re.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/cursor.css?v=1793310743">
+  <script src="/static/js/transition.js?v=1793310743"></script>
+</head>
+<body>
+  <aside class="social-rail">
+  
+  <a class="social-icon" href="https://www.linkedin.com/in/kefi-adem-62019a241/" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: #0A66C2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="https://github.com/Blackkader" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--head);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+
+  
+  <a class="social-icon" href="https://discord.com/users/376381309817192448" target="_blank" rel="noopener" aria-label="Discord" style="color: #5865F2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="mailto:adem.kefi@insat.ucar.tn" aria-label="Email" style="color: var(--label);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+
+  <div class="social-rail-line"></div>
+</aside>
+  <nav class="tabbar" aria-label="Sections">
+  <a class="tabbar-brand" href="/">blackkader.exe</a>
+  <div class="tabs">
+    <a class="tab" data-tab="about" href="/#about">About</a>
+    <a class="tab" data-tab="experience" href="/#experience">Experience</a>
+    <a class="tab" data-tab="education" href="/#education">Education</a>
+    <a class="tab" data-tab="projects" href="/#projects">Projects</a>
+    <a class="tab active" data-tab="writeups" href="/posts">Writeups</a>
+  </div>
+  <div class="nav-prefs">
+  <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="true" aria-label="Turn animations on or off">motion: on</button>
+  <button class="cursor-toggle" type="button" data-cursor-toggle aria-pressed="true" aria-label="Turn the animated cursor on or off">cursor: on</button>
+  </div>
+  <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">theme: ida dark</button>
+</nav>
+  <main class="graph graph-wide">
+    
+<article class="block" data-sym="magic" data-addr="00402000" data-tab="writeups">
+  <div class="block-head">
+    <span class="addr">.text:00402000</span>
+    <span class="sym">magic</span>
+    <span class="flag">Reverse Engineering</span>
+  </div>
+  <div class="block-body">
+    
+    <p><a class="link-more" href="/posts/fl1tz-x-securinets-mini-ctf">&#9666; back to FL1TZ x Securinets Mini-CTF</a></p>
+    
+    <h1>Magic</h1>
+    <ul class="chip-list" style="margin-bottom: var(--space-3)">
+      
+      <li class="chip">Reverse Engineering</li>
+      
+      <li class="chip">Shell Scripting</li>
+      
+      <li class="chip">Obfuscation</li>
+      
+      <li class="chip">Python</li>
+      
+    </ul>
+    <div class="post-body">
+      <h3><strong>Category :</strong> Reverse Engineering</h3>
+<h3><strong>Description :</strong></h3>
+<blockquote>
+<p>BOOO!!</p>
+<p>𝐀𝐮𝐭𝐡𝐨𝐫 : 𝐁𝐥𝐚𝐜𝐤𝐤𝐚𝐝𝐞𝐫</p>
+</blockquote>
+<h3><strong>Files Given :</strong> <em>'se7r.zip'</em></h3>
+<hr />
+<h3>Solution</h3>
+<p>Let's try to extract our zip file </p>
+<p><em>(screenshot unavailable: the original writeup linked a private/expired GitHub user-attachment image rather than a file in the repo's <code>Ressources/</code> folder, so it could not be resolved or downloaded)</em></p>
+<p>This time it's a real zip :D , what did we  get here hmmm</p>
+<p>An encrypted flag and a shell script ! we can guess that the shell script takes an input and encrypts it  using a certain algorithm , let's read the script</p>
+<div class="codehilite"><pre><span></span><code>random_seed<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">asdfg</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nv">RANDOM</span><span class="o">=</span><span class="nv">$asdfg</span>
+<span class="o">}</span>
+
+random_choice<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">qwerty</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="k">$((</span><span class="nv">RANDOM</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nv">qwerty</span><span class="k">))</span>
+<span class="o">}</span>
+
+random_seed<span class="w"> </span><span class="m">165</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"se7r se7r se7r"</span>
+<span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s2">"het ch3andek? "</span><span class="w"> </span>abc
+<span class="nv">xyz</span><span class="o">=</span><span class="nv">$abc</span>
+
+<span class="nv">_CRYPTIC_VORTEX_0x1</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">' '</span><span class="w"> </span>-f1<span class="k">)</span>
+<span class="nv">_TEMPORAL_MATRIX_SEED_</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s%N<span class="w"> </span><span class="p">|</span><span class="w"> </span>xxd<span class="w"> </span>-p<span class="w"> </span><span class="p">|</span><span class="w"> </span>fold<span class="w"> </span>-w256<span class="w"> </span><span class="p">|</span><span class="w"> </span>shuf<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n1<span class="k">)</span>
+<span class="nv">_CHAOS_FABRIC_MASTER_</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-u<span class="k">)</span>.dat
+<span class="nv">_QUANTUM_ENTANGLEMENT_KEY_</span><span class="o">=</span><span class="k">$(</span>uuidgen<span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">' '</span><span class="w"> </span>-f1<span class="k">)</span>
+<span class="nv">_VOIDSTREAM_CIPHER_IV_</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">12</span><span class="k">)</span>
+<span class="nv">_HYPERCUBE_DECOY_ARRAY_</span><span class="o">=()</span>
+
+<span class="nv">asd</span><span class="o">=</span><span class="s2">""</span>
+<span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">j</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>j&lt;<span class="si">${#</span><span class="nv">abc</span><span class="si">}</span><span class="p">;</span><span class="w"> </span>j++<span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">r</span><span class="o">=</span><span class="si">${</span><span class="nv">abc</span><span class="p">:</span><span class="nv">$j</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>
+<span class="w">    </span><span class="nv">jkl</span><span class="o">=</span><span class="k">$(</span>random_choice<span class="w"> </span><span class="m">5</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">mno</span><span class="o">=</span><span class="k">$((</span><span class="w"> </span><span class="nv">$jkl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">49</span><span class="w"> </span><span class="k">))</span>
+<span class="w">    </span><span class="nv">asd</span><span class="o">+=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"\\x</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="w"> </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$r</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">mno</span><span class="w"> </span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">256</span><span class="k">)))</span><span class="s2">"</span><span class="k">)</span>
+<span class="k">done</span>
+
+<span class="nv">def</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>rev<span class="k">)</span>
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">fi)</span>
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="p">;</span><span class="w"> </span>k++<span class="k">)</span><span class="s2">); do</span>
+<span class="s2">      p=</span><span class="si">${</span><span class="nv">xyz</span><span class="p">:</span><span class="nv">$k</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>
+<span class="s2">      qr=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$p</span><span class="s2">"</span><span class="k">)</span>
+<span class="s2">      if ((qr &gt;= 97 &amp;&amp; qr &lt;= 122)); then</span>
+<span class="s2">          printf "</span><span class="se">\\</span>x<span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">97</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">13</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">97</span><span class="k">)))</span><span class="s2">"</span>
+<span class="s2">      elif ((qr &gt;= 65 &amp;&amp; qr &lt;= 90)); then</span>
+<span class="s2">          printf "</span><span class="se">\\</span>x<span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">65</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">13</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">65</span><span class="k">)))</span><span class="s2">"</span>
+<span class="s2">      else</span>
+<span class="s2">          printf "</span>%s<span class="s2">" "</span><span class="nv">$p</span><span class="s2">"</span>
+<span class="s2">      fi</span>
+<span class="s2">  done</span>
+<span class="s2">)"</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nb">unset</span><span class="w"> </span>_CRYPTIC_VORTEX_0x1<span class="w"> </span>_TEMPORAL_MATRIX_SEED_<span class="w"> </span>_CHAOS_FABRIC_MASTER_<span class="w"> </span><span class="se">\</span>
+_QUANTUM_ENTANGLEMENT_KEY_<span class="w"> </span>_VOIDSTREAM_CIPHER_IV_<span class="w"> </span>_HYPERCUBE_DECOY_ARRAY_<span class="w"> </span><span class="se">\</span>
+_NEXUS_SHARD_ITER_<span class="w"> </span>_FRAGMENT_TEMP_<span class="w"> </span>_VOIDSTREAM_CIPHER_CHAIN_<span class="w"> </span>_QUANTUM_CYCLE_<span class="w"> </span><span class="se">\</span>
+_CHAIN_INPUT_BUFFER_<span class="w"> </span>_ENCRYPTED_CHUNK_<span class="w"> </span>_ENTROPIC_GRID_MATRIX_<span class="w"> </span>_CELL_DECRYPT_INDEX_<span class="w"> </span><span class="se">\</span>
+_QUANTUM_CELL_<span class="w"> </span>_CELL_HASH_<span class="w"> </span>_ENCRYPTED_CELL_<span class="w"> </span>_TEMPORAL_ECHO_BUFFER_<span class="w"> </span>_ECHO_ITER_<span class="w"> </span><span class="se">\</span>
+_ECHO_HASH_CHAIN_<span class="w"> </span>_ECHO_ENCRYPTED_<span class="w"> </span>_ABYSSAL_KEYSTREAM_<span class="w"> </span>_KEYSTREAM_SEG_<span class="w"> </span>_SEGMENT_DIGEST_<span class="w"> </span><span class="se">\</span>
+_TRANSFORMED_SEGMENT_<span class="w"> </span>_ENCRYPTED_SEGMENT_<span class="w"> </span>_QUANTUM_ENTANGLEMENT_MATRIX_<span class="w"> </span>_NODE_CRYPT_INDEX_<span class="w"> </span><span class="se">\</span>
+_ENTANGLEMENT_NODE_<span class="w"> </span>_NODE_HASH_<span class="w"> </span>_NODE_CIPHER_<span class="w"> </span>_STELLAR_OBFUSCATION_CYCLE_<span class="w"> </span>_CYCLIC_KEY_<span class="w"> </span><span class="se">\</span>
+_CYCLIC_IV_<span class="w"> </span>_CYCLIC_PAYLOAD_<span class="w"> </span>_CYCLIC_CIPHER_
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">zyx</span><span class="o">=</span><span class="k">$(for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="m">20</span><span class="p">;</span><span class="w"> </span>k++<span class="k">)</span><span class="o">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%s"</span><span class="w"> </span><span class="k">$(</span>random_choice<span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{printf("%c", $1 + 97)}'</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+
+ls<span class="w"> </span><span class="nv">$_CHAOS_FABRIC_MASTER_</span><span class="w"> </span><span class="nv">$_ENTROPIC_GRID_MATRIX_</span><span class="w"> </span><span class="nv">$_TEMPORAL_ECHO_BUFFER_</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">$_ABYSSAL_KEYSTREAM_</span><span class="w"> </span><span class="nv">$_QUANTUM_ENTANGLEMENT_MATRIX_</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">ehryf</span><span class="o">=</span><span class="s2">"GRATZ THIS IS THE FLAG"</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="p">;</span><span class="w"> </span>k++<span class="k">)</span><span class="s2">); do</span>
+<span class="s2">      p=</span><span class="si">${</span><span class="nv">xyz</span><span class="p">:</span><span class="nv">$k</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>
+<span class="s2">      qr=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$p</span><span class="s2">"</span><span class="k">)</span>
+<span class="s2">      if ((qr &gt;= 97 &amp;&amp; qr &lt;= 122)); then</span>
+<span class="s2">          printf "</span><span class="se">\\</span>x<span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">97</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">20</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">97</span><span class="k">)))</span><span class="s2">"</span>
+<span class="s2">      elif ((qr &gt;= 65 &amp;&amp; qr &lt;= 90)); then</span>
+<span class="s2">          printf "</span><span class="se">\\</span>x<span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">65</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">20</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">65</span><span class="k">)))</span><span class="s2">"</span>
+<span class="s2">      else</span>
+<span class="s2">          printf "</span>%s<span class="s2">" "</span><span class="nv">$p</span><span class="s2">"</span>
+<span class="s2">      fi</span>
+<span class="s2">  done</span>
+<span class="s2">)"</span>
+
+<span class="nv">xyz</span><span class="o">+=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">0</span><span class="k">)</span>
+
+<span class="nv">_STELLAR_OBFUSCATION_CYCLE_</span><span class="o">=</span><span class="m">0</span>
+<span class="k">while</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$_STELLAR_OBFUSCATION_CYCLE_</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">24</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">_CYCLIC_KEY_</span><span class="o">=</span><span class="k">$(</span>uuidgen<span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">' '</span><span class="w"> </span>-f1<span class="k">)</span>
+<span class="w">    </span><span class="nv">_CYCLIC_IV_</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">16</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">_CYCLIC_PAYLOAD_</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-w0<span class="k">)</span>
+<span class="w">    </span><span class="nv">_CYCLIC_CIPHER_</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>enc<span class="w"> </span>-aes-256-gcm<span class="w"> </span>-K<span class="w"> </span><span class="nv">$_CYCLIC_KEY_</span><span class="w"> </span>-iv<span class="w"> </span><span class="nv">$_CYCLIC_IV_</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-in<span class="w"> </span>&lt;<span class="o">(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$_CYCLIC_PAYLOAD_</span><span class="k">)</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-w0<span class="o">)</span>
+<span class="w">    </span><span class="nv">_HYPERCUBE_DECOY_ARRAY_</span><span class="o">+=(</span><span class="nv">$_CYCLIC_CIPHER_</span><span class="o">)</span>
+<span class="w">    </span><span class="nv">_STELLAR_OBFUSCATION_CYCLE_</span><span class="o">=</span><span class="k">$((</span><span class="nv">_STELLAR_OBFUSCATION_CYCLE_</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span>
+<span class="k">done</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">lmn</span><span class="o">=</span><span class="s2">""</span>
+<span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="m">12</span><span class="p">;</span><span class="w"> </span>k++<span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">lmn</span><span class="o">+=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"\\x</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="m">32</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">$(</span>random_choice<span class="w"> </span><span class="m">95</span><span class="k">))))</span><span class="s2">)"</span><span class="k">)</span>
+<span class="k">done</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="k">)</span>
+
+<span class="nv">_QUANTUM_ENTANGLEMENT_MATRIX_</span><span class="o">=</span><span class="k">$(</span>mktemp<span class="w"> </span>-u<span class="k">)</span>.qem
+dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">of</span><span class="o">=</span><span class="nv">$_QUANTUM_ENTANGLEMENT_MATRIX_</span><span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">128</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">16</span><span class="w"> </span><span class="nv">status</span><span class="o">=</span>none
+split<span class="w"> </span>-b<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="nv">$_QUANTUM_ENTANGLEMENT_MATRIX_</span><span class="w"> </span><span class="si">${</span><span class="nv">_QUANTUM_ENTANGLEMENT_MATRIX_</span><span class="si">}</span>.node<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+
+<span class="nv">uvw</span><span class="o">=</span><span class="s2">""</span>
+<span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="p">;</span><span class="w"> </span>k++<span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">p</span><span class="o">=</span><span class="si">${</span><span class="nv">xyz</span><span class="p">:</span><span class="nv">$k</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>
+<span class="w">    </span><span class="nv">qr</span><span class="o">=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$p</span><span class="s2">"</span><span class="k">)</span>
+<span class="w">    </span><span class="nv">uvw</span><span class="o">+=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"\\x</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">10</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">95</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">32</span><span class="k">)))</span><span class="s2">"</span><span class="k">)</span>
+<span class="k">done</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>rev<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-cd<span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="k">)</span>
+
+dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">of</span><span class="o">=</span><span class="nv">$_CHAOS_FABRIC_MASTER_</span><span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">512</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">32</span><span class="w"> </span><span class="nv">status</span><span class="o">=</span>none
+openssl<span class="w"> </span>enc<span class="w"> </span>-aes-256-ctr<span class="w"> </span>-K<span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$_CRYPTIC_VORTEX_0x1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-c1-64<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+-iv<span class="w"> </span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">16</span><span class="k">)</span><span class="w"> </span>-in<span class="w"> </span><span class="nv">$_CHAOS_FABRIC_MASTER_</span><span class="w"> </span>-out<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+<span class="nv">rst</span><span class="o">=</span><span class="s2">""</span>
+
+<span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="m">10</span><span class="p">;</span><span class="w"> </span>k++<span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">rst</span><span class="o">+=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%s"</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span>random_choice<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{printf("%c", $1+33)}'</span><span class="k">)</span><span class="s2">"</span><span class="k">)</span>
+<span class="k">done</span>
+
+<span class="nv">xyz</span><span class="o">=(</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/./&amp; /g'</span><span class="k">)</span><span class="w"> </span><span class="o">)</span>
+
+<span class="nv">_NEXUS_SHARD_ITER_</span><span class="o">=</span><span class="m">0</span>
+<span class="k">while</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$_NEXUS_SHARD_ITER_</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">_FRAGMENT_TEMP_</span><span class="o">=</span><span class="si">${</span><span class="nv">_CHAOS_FABRIC_MASTER_</span><span class="si">}</span>.frag.<span class="nv">$_NEXUS_SHARD_ITER_</span>
+<span class="w">    </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span><span class="nv">$_CHAOS_FABRIC_MASTER_</span><span class="w"> </span><span class="nv">of</span><span class="o">=</span><span class="nv">$_FRAGMENT_TEMP_</span><span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">16</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">skip</span><span class="o">=</span><span class="nv">$_NEXUS_SHARD_ITER_</span><span class="w"> </span><span class="nv">status</span><span class="o">=</span>none
+<span class="w">    </span><span class="nv">_HYPERCUBE_DECOY_ARRAY_</span><span class="o">+=(</span><span class="k">$(</span>openssl<span class="w"> </span>dgst<span class="w"> </span>-sha3-512<span class="w"> </span>-binary<span class="w"> </span><span class="nv">$_FRAGMENT_TEMP_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-w0<span class="k">)</span><span class="o">)</span>
+<span class="w">    </span>ls<span class="w"> </span><span class="nv">$_FRAGMENT_TEMP_</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<span class="w">    </span><span class="nv">_NEXUS_SHARD_ITER_</span><span class="o">=</span><span class="k">$((</span><span class="nv">_NEXUS_SHARD_ITER_</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="k">))</span>
+<span class="k">done</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(for</span><span class="w"> </span>p<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">xyz</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s2">"\\x</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="w"> </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$p</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">5</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">256</span><span class="k">)))</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">done)</span>
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>rev<span class="w"> </span><span class="p">|</span><span class="w"> </span>rev<span class="k">)</span>
+
+<span class="nv">zxcv</span><span class="o">=()</span>
+<span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="p">;</span><span class="w"> </span>k++<span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">l</span><span class="o">=</span><span class="si">${</span><span class="nv">xyz</span><span class="p">:</span><span class="nv">$k</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>
+<span class="w">    </span><span class="nv">zxcv</span><span class="o">+=(</span><span class="w"> </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%08d"</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"obase=2; ibase=10; </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$l</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="o">)</span>
+<span class="k">done</span>
+
+<span class="nv">qwert</span><span class="o">=()</span>
+<span class="k">for</span><span class="w"> </span>l<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">zxcv</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">qwert</span><span class="o">+=(</span><span class="w"> </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%08d"</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"obase=2; ibase=10; </span><span class="k">$((</span><span class="m">2#</span><span class="nv">$l</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="m">8</span><span class="k">))</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="o">)</span>
+<span class="k">done</span>
+
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">0</span>..15<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">64</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>enc<span class="w"> </span>-rc2-64-cbc<span class="w"> </span>-K<span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$VOID_CONSTANT</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sha256sum<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">' '</span><span class="w"> </span>-f1<span class="k">)</span><span class="w"> </span>-iv<span class="w"> </span><span class="k">$(</span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/urandom<span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">8</span><span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">status</span><span class="o">=</span>none<span class="w"> </span><span class="p">|</span><span class="w"> </span>hexdump<span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="s1">'/1 "%02X"'</span><span class="k">)</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<span class="w">    </span>shred<span class="w"> </span>-u<span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">NOCTURNE_CIPHER</span><span class="si">}</span><span class="s2">.</span><span class="nv">$i</span><span class="s2">"</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<span class="k">done</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nv">IFS</span><span class="o">=</span><span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">qwert</span><span class="p">[*]</span><span class="si">}</span><span class="s2">"</span><span class="k">)</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"magic is done ."</span>
+</code></pre></div>
+
+<p>What is all of this , this looks scary and too complicated , time to give up and rest a bit ....</p>
+<p>NOO ! read the description , it says <strong>BOOO!!</strong> the script is supposed to be scary not hard ! let's try to run it and give it this input <strong>BOOO</strong></p>
+<div class="codehilite"><pre><span></span><code>d: failed to open '': No such file or directory
+dd: failed to open '': No such file or directory
+.frag.0: No such file or directory
+80DB5B95757F0000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.0, r)
+80DB5B95757F0000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.1: No such file or directory
+807B8BF6727A0000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.1, r)
+807B8BF6727A0000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.2: No such file or directory
+800BEC346D750000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.2, r)
+800BEC346D750000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.3: No such file or directory
+80DB0566E67C0000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.3, r)
+80DB0566E67C0000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.4: No such file or directory
+80CB3FD7AF740000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.4, r)
+80CB3FD7AF740000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.5: No such file or directory
+80FB8F3542700000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.5, r)
+80FB8F3542700000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.6: No such file or directory
+805B528B317E0000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.6, r)
+805B528B317E0000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.7: No such file or directory
+803BD15B69730000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.7, r)
+803BD15B69730000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.8: No such file or directory
+80EB69C753780000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.8, r)
+80EB69C753780000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.9: No such file or directory
+805B8F90EF7E0000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.9, r)
+805B8F90EF7E0000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.10: No such file or directory
+80BBB438F27C0000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.10, r)
+80BBB438F27C0000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.11: No such file or directory
+80CB508FB57D0000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.11, r)
+80CB508FB57D0000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.12: No such file or directory
+805BDBF2A0750000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.12, r)
+805BDBF2A0750000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.13: No such file or directory
+80BBE49FDA760000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.13, r)
+80BBE49FDA760000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.14: No such file or directory
+803BB28EAD780000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.14, r)
+803BB28EAD780000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+dd: failed to open '': No such file or directory
+.frag.15: No such file or directory
+80DBE4730D770000:error:80000002:system library:file_ctrl:No such file or directory:crypto/bio/bss_file.c:297:calling fopen(.frag.15, r)
+80DBE4730D770000:error:10080002:BIO routines:file_ctrl:system lib:crypto/bio/bss_file.c:300:
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+801B223DA9730000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+80EBE0D0E4740000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+80CB48D314750000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+80CBAC9E3D740000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+803B49B225770000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+802B657A32700000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+801B09B263760000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+800B60384E790000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+806B19B953730000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+803B158A53700000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+80DBD795277D0000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+807BAAB99B780000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+804B78C19F7B0000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+809B21D61B7C0000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+80EB76C1677C0000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+hex string is too long, ignoring excess
+Error setting cipher RC2-64-CBC
+800B09A587760000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-64-CBC : 0), Properties ()
+01011001010110010101100101001100
+magic is done .
+</code></pre></div>
+
+<p>It is trying to open up files from my system and doing some crypto  !! is the author trying to hack me or something ? i don't think so :/ , but what is interesting here are the last two lines ! </p>
+<div class="codehilite"><pre><span></span><code>01011001010110010101100101001100
+magic is done .
+</code></pre></div>
+
+<p>let's try with another input , this time i'll make it one character "A"</p>
+<p>and again we inspect the last two lines :</p>
+<div class="codehilite"><pre><span></span><code>01001011
+magic is done .
+</code></pre></div>
+
+<p>and now with "AA"</p>
+<div class="codehilite"><pre><span></span><code>0100101101001011
+magic is done .
+</code></pre></div>
+
+<p>we can guess now that each encrypted character is an 8 length string !</p>
+<p>Time to dig into the script ! , but this time we will start from the end (where the encrypted input is being printed)</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"magic is done ."</span>
+</code></pre></div>
+
+<p>so the variable we are interested in is $$xyz$</p>
+<p>all the other things are just decoys !! , so let's remove all unnecessary lines </p>
+<div class="codehilite"><pre><span></span><code>random_seed<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">asdfg</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nv">RANDOM</span><span class="o">=</span><span class="nv">$asdfg</span>
+<span class="o">}</span>
+
+random_choice<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="nv">qwerty</span><span class="o">=</span><span class="nv">$1</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="k">$((</span><span class="nv">RANDOM</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="nv">qwerty</span><span class="k">))</span>
+<span class="o">}</span>
+
+random_seed<span class="w"> </span><span class="m">165</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"se7r se7r se7r"</span>
+<span class="nb">read</span><span class="w"> </span>-p<span class="w"> </span><span class="s2">"het ch3andek? "</span><span class="w"> </span>abc
+<span class="nv">xyz</span><span class="o">=</span><span class="nv">$abc</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">fi)</span>
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="p">;</span><span class="w"> </span>k++<span class="k">)</span><span class="s2">); do</span>
+<span class="s2">      p=</span><span class="si">${</span><span class="nv">xyz</span><span class="p">:</span><span class="nv">$k</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>
+<span class="s2">      qr=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$p</span><span class="s2">"</span><span class="k">)</span>
+<span class="s2">      if ((qr &gt;= 97 &amp;&amp; qr &lt;= 122)); then</span>
+<span class="s2">          printf "</span><span class="se">\\</span>x<span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">97</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">13</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">97</span><span class="k">)))</span><span class="s2">"</span>
+<span class="s2">      elif ((qr &gt;= 65 &amp;&amp; qr &lt;= 90)); then</span>
+<span class="s2">          printf "</span><span class="se">\\</span>x<span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">65</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">13</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">65</span><span class="k">)))</span><span class="s2">"</span>
+<span class="s2">      else</span>
+<span class="s2">          printf "</span>%s<span class="s2">" "</span><span class="nv">$p</span><span class="s2">"</span>
+<span class="s2">      fi</span>
+<span class="s2">  done</span>
+<span class="s2">)"</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="p">;</span><span class="w"> </span>k++<span class="k">)</span><span class="s2">); do</span>
+<span class="s2">      p=</span><span class="si">${</span><span class="nv">xyz</span><span class="p">:</span><span class="nv">$k</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>
+<span class="s2">      qr=</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$p</span><span class="s2">"</span><span class="k">)</span>
+<span class="s2">      if ((qr &gt;= 97 &amp;&amp; qr &lt;= 122)); then</span>
+<span class="s2">          printf "</span><span class="se">\\</span>x<span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">97</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">20</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">97</span><span class="k">)))</span><span class="s2">"</span>
+<span class="s2">      elif ((qr &gt;= 65 &amp;&amp; qr &lt;= 90)); then</span>
+<span class="s2">          printf "</span><span class="se">\\</span>x<span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="nv">qr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">65</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">20</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">26</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">65</span><span class="k">)))</span><span class="s2">"</span>
+<span class="s2">      else</span>
+<span class="s2">          printf "</span>%s<span class="s2">" "</span><span class="nv">$p</span><span class="s2">"</span>
+<span class="s2">      fi</span>
+<span class="s2">  done</span>
+<span class="s2">)"</span>
+
+<span class="nv">xyz</span><span class="o">+=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-c<span class="w"> </span><span class="m">0</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>rev<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-cd<span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{for (h=1; h&lt;=length; h++) printf("%s", substr($0, h, 1));}'</span><span class="k">)</span>
+
+<span class="nv">xyz</span><span class="o">=(</span><span class="w"> </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">'s/./&amp; /g'</span><span class="k">)</span><span class="w"> </span><span class="o">)</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(for</span><span class="w"> </span>p<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">xyz</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s2">"\\x</span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span>%x<span class="w"> </span><span class="k">$((</span><span class="o">(</span><span class="w"> </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$p</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">5</span><span class="o">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="m">256</span><span class="k">)))</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">done)</span>
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>rev<span class="w"> </span><span class="p">|</span><span class="w"> </span>rev<span class="k">)</span>
+
+<span class="nv">zxcv</span><span class="o">=()</span>
+<span class="k">for</span><span class="w"> </span><span class="o">((</span><span class="nv">k</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span>k&lt;<span class="si">${#</span><span class="nv">xyz</span><span class="si">}</span><span class="p">;</span><span class="w"> </span>k++<span class="o">))</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">l</span><span class="o">=</span><span class="si">${</span><span class="nv">xyz</span><span class="p">:</span><span class="nv">$k</span><span class="p">:</span><span class="nv">1</span><span class="si">}</span>
+<span class="w">    </span><span class="nv">zxcv</span><span class="o">+=(</span><span class="w"> </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%08d"</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"obase=2; ibase=10; </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%d"</span><span class="w"> </span><span class="s2">"'</span><span class="nv">$l</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="o">)</span>
+<span class="k">done</span>
+
+<span class="nv">qwert</span><span class="o">=()</span>
+<span class="k">for</span><span class="w"> </span>l<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">zxcv</span><span class="p">[@]</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nv">qwert</span><span class="o">+=(</span><span class="w"> </span><span class="k">$(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">"%08d"</span><span class="w"> </span><span class="s2">"</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">"obase=2; ibase=10; </span><span class="k">$((</span><span class="m">2#</span><span class="nv">$l</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="m">8</span><span class="k">))</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>bc<span class="k">)</span><span class="s2">"</span><span class="k">)</span><span class="w"> </span><span class="o">)</span>
+<span class="k">done</span>
+
+<span class="nv">xyz</span><span class="o">=</span><span class="k">$(</span><span class="nv">IFS</span><span class="o">=</span><span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="si">${</span><span class="nv">qwert</span><span class="p">[*]</span><span class="si">}</span><span class="s2">"</span><span class="k">)</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$xyz</span><span class="s2">"</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"magic is done ."</span>
+</code></pre></div>
+
+<p>Now we have everything related to $$xyz$</p>
+<p>If you are like me , someone who hates shell , we can try to convert this to python !!! , debug each line , or use ai</p>
+<p>By doing that we can confirm that we have even more decoys !</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">random_seed</span><span class="p">(</span><span class="n">asdfg</span><span class="p">):</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">asdfg</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">random_choice</span><span class="p">(</span><span class="n">qwerty</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">qwerty</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">random_seed</span><span class="p">(</span><span class="mi">165</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"se7r se7r se7r"</span><span class="p">)</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"het ch3andek? "</span><span class="p">)</span>
+
+<span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">""</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">))])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">97</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">97</span><span class="p">)</span> <span class="k">if</span> <span class="mi">97</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span> <span class="k">else</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="mi">65</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="k">else</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">))])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">))])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">))])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">97</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">97</span><span class="p">)</span> <span class="k">if</span> <span class="mi">97</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span> <span class="k">else</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="mi">65</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="k">else</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">])</span>
+<span class="n">xyz</span> <span class="o">+=</span> <span class="n">xyz</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">))])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">xyz</span><span class="p">))</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">xyz</span><span class="p">))</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">))])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">char</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">]</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span> <span class="o">%</span> <span class="mi">256</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">zxcv</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="s1">'08b'</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">]</span>
+<span class="n">qwert</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">^</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">'08b'</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">zxcv</span><span class="p">]</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">qwert</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"magic is done ."</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Those lines are :</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">random_seed</span><span class="p">(</span><span class="n">asdfg</span><span class="p">):</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">asdfg</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">random_choice</span><span class="p">(</span><span class="n">qwerty</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">qwerty</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">random_seed</span><span class="p">(</span><span class="mi">165</span><span class="p">)</span>
+
+<span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">""</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="n">h</span><span class="p">]</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="p">))])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">char</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">]</span>
+<span class="n">xyz</span> <span class="o">+=</span> <span class="n">xyz</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">xyz</span><span class="p">))</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">xyz</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Removing them will even get us a shortened code : </p>
+<div class="codehilite"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">"se7r se7r se7r"</span><span class="p">)</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"het ch3andek? "</span><span class="p">)</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">97</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">97</span><span class="p">)</span> <span class="k">if</span> <span class="mi">97</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span> <span class="k">else</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="mi">65</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="k">else</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">97</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">97</span><span class="p">)</span> <span class="k">if</span> <span class="mi">97</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span> <span class="k">else</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="mi">65</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="k">else</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">])</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span> <span class="o">%</span> <span class="mi">256</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="n">zxcv</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="s1">'08b'</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">]</span>
+<span class="n">qwert</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">^</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">'08b'</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">zxcv</span><span class="p">]</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">qwert</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"magic is done ."</span><span class="p">)</span>
+</code></pre></div>
+
+<p>ouffff , from 170 lines to 10 lines !</p>
+<p>NOW TIME TO REVERSEEE ! </p>
+<p>Let's see what does each line do ! </p>
+<div class="codehilite"><pre><span></span><code><span class="c1">#ROT13:</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">97</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">97</span><span class="p">)</span> <span class="k">if</span> <span class="mi">97</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span> <span class="k">else</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="mi">65</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="k">else</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">])</span>
+<span class="c1">#ROT20:</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">97</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">97</span><span class="p">)</span> <span class="k">if</span> <span class="mi">97</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">122</span> <span class="k">else</span> <span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="mi">65</span> <span class="o">&lt;=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">90</span> <span class="k">else</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">])</span>
+<span class="c1">#Reversing the string then shifting by -5 for each character in the ascii table :</span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span> <span class="o">%</span> <span class="mi">256</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+<span class="c1">#Converting each character to binary represented in 8 bits </span>
+<span class="n">zxcv</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="s1">'08b'</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">]</span>
+<span class="c1">#Each character is XORED with 8 and then the result is converted again to binary representation</span>
+<span class="n">qwert</span> <span class="o">=</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">^</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">'08b'</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">zxcv</span><span class="p">]</span>
+<span class="c1">#The resulting list is joined into a single  string </span>
+<span class="n">xyz</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">qwert</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Time to get that encryptedflag and run it through our solver !</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Decryptingggg ."</span><span class="p">)</span>
+
+<span class="n">v2</span><span class="o">=</span><span class="s2">"0111000000110010011000100101010101100010010100100110100101111101011010110010011001010010011111010010011101010111010100100110111101111000011110010101001001111101001001000110001001010100011111100100101000110100001001000100011001000000"</span>
+<span class="n">l</span><span class="o">=</span><span class="p">[</span><span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">8</span><span class="p">]</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">v2</span><span class="p">),</span><span class="mi">8</span><span class="p">)]</span>
+<span class="n">l2</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="s1">'00001000'</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="si">:</span><span class="s2">08b</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">l</span><span class="p">]</span>
+<span class="n">v2</span><span class="o">=</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span>
+<span class="n">l3</span><span class="o">=</span><span class="p">[</span><span class="nb">chr</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span><span class="mi">2</span><span class="p">))</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">v2</span><span class="p">),</span><span class="mi">8</span><span class="p">)]</span>
+<span class="n">v2</span><span class="o">=</span><span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">l3</span><span class="p">)</span>
+
+<span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">v2</span> <span class="o">=</span> <span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">v4</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span> <span class="o">%</span> <span class="mi">256</span><span class="p">)</span> <span class="k">for</span> <span class="n">v4</span> <span class="ow">in</span> <span class="n">v2</span><span class="p">])</span>
+
+<span class="n">v2</span> <span class="o">=</span> <span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(((</span><span class="nb">ord</span><span class="p">(</span><span class="n">v4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">97</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span><span class="p">)</span> <span class="o">+</span> <span class="mi">97</span><span class="p">)</span> <span class="k">if</span> <span class="s1">'a'</span> <span class="o">&lt;=</span> <span class="n">v4</span> <span class="o">&lt;=</span> <span class="s1">'z'</span> <span class="k">else</span>
+              <span class="p">(</span><span class="nb">chr</span><span class="p">(((</span><span class="nb">ord</span><span class="p">(</span><span class="n">v4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span><span class="p">)</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="s1">'A'</span> <span class="o">&lt;=</span> <span class="n">v4</span> <span class="o">&lt;=</span> <span class="s1">'Z'</span> <span class="k">else</span> <span class="n">v4</span><span class="p">)</span> <span class="k">for</span> <span class="n">v4</span> <span class="ow">in</span> <span class="n">v2</span><span class="p">])</span>
+
+<span class="n">v2</span> <span class="o">=</span> <span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(((</span><span class="nb">ord</span><span class="p">(</span><span class="n">v4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">97</span> <span class="o">-</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span><span class="p">)</span> <span class="o">+</span> <span class="mi">97</span><span class="p">)</span> <span class="k">if</span> <span class="s1">'a'</span> <span class="o">&lt;=</span> <span class="n">v4</span> <span class="o">&lt;=</span> <span class="s1">'z'</span> <span class="k">else</span>
+              <span class="p">(</span><span class="nb">chr</span><span class="p">(((</span><span class="nb">ord</span><span class="p">(</span><span class="n">v4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span> <span class="o">-</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span><span class="p">)</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span> <span class="k">if</span> <span class="s1">'A'</span> <span class="o">&lt;=</span> <span class="n">v4</span> <span class="o">&lt;=</span> <span class="s1">'Z'</span> <span class="k">else</span> <span class="n">v4</span><span class="p">)</span> <span class="k">for</span> <span class="n">v4</span> <span class="ow">in</span> <span class="n">v2</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"flag  :"</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+</code></pre></div>
+
+<p>And there u go : </p>
+<div class="codehilite"><pre><span></span><code>FL1TZ{th1s_one_w4s_3asy_huh?}
+</code></pre></div>
+    </div>
+  </div>
+</article>
+<div class="edge" aria-hidden="true"></div>
+
+  </main>
+  <footer class="graph">
+  <div class="block block-end">
+    <div class="block-head"><span class="addr">.text:00401F00</span><span class="sym">sub_farewell</span><span class="flag">noreturn</span></div>
+    <div class="block-body">
+      <span class="retn">retn</span> &nbsp;; Adem Kefi (blackkader)
+    </div>
+  </div>
+  
+  <nav class="social-row" aria-label="Contact and social links">
+    
+  <a class="social-icon" href="https://www.linkedin.com/in/kefi-adem-62019a241/" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: #0A66C2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="https://github.com/Blackkader" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--head);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+
+  
+  <a class="social-icon" href="https://discord.com/users/376381309817192448" target="_blank" rel="noopener" aria-label="Discord" style="color: #5865F2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="mailto:adem.kefi@insat.ucar.tn" aria-label="Email" style="color: var(--label);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+  </nav>
+</footer>
+  <div class="statusbar" aria-hidden="true">
+    <span class="st-idle">&#9679; AU: idle</span>
+    <span class="st-hide">Down</span>
+    <span class="st-hide" data-xref-toggle>X: show clickables</span>
+    <span class="st-hide">Disk: 42GB</span>
+    <span class="st-right">
+      <span class="st-addr" data-st-addr>.text:00401000</span>
+      <span class="st-sym" data-st-sym>start</span>
+    </span>
+  </div>
+  <script type="application/json" id="site-index">[{"k": "ctf", "t": "Securinets CTF Quals", "u": "/posts/securinets-quals-2026"}, {"c": "Securinets CTF Quals", "k": "writeup", "t": "Revenant", "u": "/posts/securinets-quals-2026/revenant"}, {"c": "Securinets CTF Quals", "k": "writeup", "t": "Letmethink", "u": "/posts/securinets-quals-2026/letmethink"}, {"k": "ctf", "t": "DarkestHour", "u": "/posts/darkesthour"}, {"c": "DarkestHour", "k": "writeup", "t": "Obfer", "u": "/posts/darkesthour/obfer"}, {"k": "ctf", "t": "Summerrush", "u": "/posts/summerrush"}, {"c": "Summerrush", "k": "writeup", "t": "Adventure Time", "u": "/posts/summerrush/adventuretime"}, {"c": "Summerrush", "k": "writeup", "t": "Hoogments", "u": "/posts/summerrush/hoogments"}, {"c": "Summerrush", "k": "writeup", "t": "Pyshell", "u": "/posts/summerrush/pyshell"}, {"k": "ctf", "t": "Securinets Friendly", "u": "/posts/securinets-friendly"}, {"c": "Securinets Friendly", "k": "writeup", "t": "DynamicIntro", "u": "/posts/securinets-friendly/dynamic-intro"}, {"c": "Securinets Friendly", "k": "writeup", "t": "ExportedActivity", "u": "/posts/securinets-friendly/exported-activity"}, {"c": "Securinets Friendly", "k": "writeup", "t": "IntentHandler", "u": "/posts/securinets-friendly/intent-handler"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Irreversible", "u": "/posts/securinets-friendly/irreversible"}, {"c": "Securinets Friendly", "k": "writeup", "t": "LoginMaster", "u": "/posts/securinets-friendly/login-master"}, {"c": "Securinets Friendly", "k": "writeup", "t": "LoginMaster2", "u": "/posts/securinets-friendly/login-master-2"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Meoww", "u": "/posts/securinets-friendly/meoww"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Native1", "u": "/posts/securinets-friendly/native-1"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Native2", "u": "/posts/securinets-friendly/native-2"}, {"c": "Securinets Friendly", "k": "writeup", "t": "RollTheDice", "u": "/posts/securinets-friendly/roll-the-dice"}, {"c": "Securinets Friendly", "k": "writeup", "t": "SecretDigger", "u": "/posts/securinets-friendly/secret-digger"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Tricky", "u": "/posts/securinets-friendly/tricky"}, {"c": "Securinets Friendly", "k": "writeup", "t": "UnexportedActivity", "u": "/posts/securinets-friendly/unexported-activity"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Welcome", "u": "/posts/securinets-friendly/welcome"}, {"k": "ctf", "t": "FL1TZ x Securinets Mini-CTF", "u": "/posts/fl1tz-x-securinets-mini-ctf"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Anderouid", "u": "/posts/fl1tz-x-securinets-mini-ctf/anderouid"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Hexer", "u": "/posts/fl1tz-x-securinets-mini-ctf/hexer"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Magic", "u": "/posts/fl1tz-x-securinets-mini-ctf/magic"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Maze1", "u": "/posts/fl1tz-x-securinets-mini-ctf/maze1"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Maze2", "u": "/posts/fl1tz-x-securinets-mini-ctf/maze2"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Naggez", "u": "/posts/fl1tz-x-securinets-mini-ctf/naggez"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Oid", "u": "/posts/fl1tz-x-securinets-mini-ctf/oid"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Serialo", "u": "/posts/fl1tz-x-securinets-mini-ctf/serialo"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Stringz", "u": "/posts/fl1tz-x-securinets-mini-ctf/stringz"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "X0r", "u": "/posts/fl1tz-x-securinets-mini-ctf/x0r"}]</script>
+  
+  <script src="/static/js/main.js?v=1793310743" defer></script>
+  <script src="/static/js/nav.js?v=1793310743" defer></script>
+  <script src="/static/js/lightbox.js?v=1793310743" defer></script>
+  <script src="/static/js/minimap.js?v=1793310743" defer></script>
+  <script src="/static/js/palette.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient_e33.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient_re.js?v=1793310743" defer></script>
+  <script src="/static/js/cursor.js?v=1793310743" defer></script>
+</body>
+</html>

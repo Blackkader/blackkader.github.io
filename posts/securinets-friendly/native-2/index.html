@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-dIZvJ8DqW/1X4y0O6aI5UPABQELt1l2BTHohK5HWvVE=' 'sha256-9HHnGVC497OjgOFzxn/+mDm2PxMkGmqK0aKJxMa9a48='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'"><meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Native2</title>
+  <meta name="description" content="A lost expeditioner.">
+  <meta property="og:title" content="Adem Kefi">
+  <meta property="og:description" content="A lost expeditioner.">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
+  <script>
+    // Apply the saved theme before first paint, and start fetching that theme's main font right away.
+    // IDA Dark is the default (IDA's two tones share data-theme="ida"); "ember" (older visits stored "ida_dark") is Ember & Ash, which has no data-theme.
+    var t = "ida", tone = "dark";
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "ember" || saved === "ida_dark") { t = "ember"; tone = ""; }
+      else if (saved === "deco" || saved === "e33" || saved === "ghidra" || saved === "binja") { t = saved; tone = ""; }
+      else if (saved === "ida") tone = "";
+    } catch (e) {}
+    if (t !== "ember") document.documentElement.setAttribute("data-theme", t);
+    if (tone) document.documentElement.setAttribute("data-tone", tone);
+    try {
+      if (localStorage.getItem("cursor") === "off") document.documentElement.classList.add("no-cursor");
+      var m = localStorage.getItem("motion"), nv = navigator, lowEnd = (nv.connection && nv.connection.saveData) || (nv.deviceMemory && nv.deviceMemory <= 2) || (nv.hardwareConcurrency && nv.hardwareConcurrency <= 2);
+      if (m === "off" || (m === null && lowEnd)) document.documentElement.classList.add("no-motion");
+    } catch (e) {}
+    var mainFont = { deco: "lora-latin-1ace0d36", e33: "eb-garamond-latin-ef73a8c5", ida: "source-code-pro-latin-a51a4f54",
+                     ghidra: "ibm-plex-mono-400-latin-97032920", binja: "roboto-mono-latin-195cc3f2" }[t] || "jetbrains-mono-latin-0a7197f9";
+    var pre = document.createElement("link");
+    pre.rel = "preload"; pre.as = "font"; pre.type = "font/woff2"; pre.crossOrigin = "anonymous";
+    pre.href = "/static/fonts/" + mainFont + ".woff2";
+    document.head.appendChild(pre);
+  </script>
+  <link rel="stylesheet" href="/static/css/fonts.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/pygments.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/style.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/themes_re.css?v=1793310743">
+  <link rel="stylesheet" href="/static/css/cursor.css?v=1793310743">
+  <script src="/static/js/transition.js?v=1793310743"></script>
+</head>
+<body>
+  <aside class="social-rail">
+  
+  <a class="social-icon" href="https://www.linkedin.com/in/kefi-adem-62019a241/" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: #0A66C2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="https://github.com/Blackkader" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--head);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+
+  
+  <a class="social-icon" href="https://discord.com/users/376381309817192448" target="_blank" rel="noopener" aria-label="Discord" style="color: #5865F2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="mailto:adem.kefi@insat.ucar.tn" aria-label="Email" style="color: var(--label);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+
+  <div class="social-rail-line"></div>
+</aside>
+  <nav class="tabbar" aria-label="Sections">
+  <a class="tabbar-brand" href="/">blackkader.exe</a>
+  <div class="tabs">
+    <a class="tab" data-tab="about" href="/#about">About</a>
+    <a class="tab" data-tab="experience" href="/#experience">Experience</a>
+    <a class="tab" data-tab="education" href="/#education">Education</a>
+    <a class="tab" data-tab="projects" href="/#projects">Projects</a>
+    <a class="tab active" data-tab="writeups" href="/posts">Writeups</a>
+  </div>
+  <div class="nav-prefs">
+  <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="true" aria-label="Turn animations on or off">motion: on</button>
+  <button class="cursor-toggle" type="button" data-cursor-toggle aria-pressed="true" aria-label="Turn the animated cursor on or off">cursor: on</button>
+  </div>
+  <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">theme: ida dark</button>
+</nav>
+  <main class="graph graph-wide">
+    
+<article class="block" data-sym="native-2" data-addr="00402000" data-tab="writeups">
+  <div class="block-head">
+    <span class="addr">.text:00402000</span>
+    <span class="sym">native-2</span>
+    <span class="flag">Mobile Security</span>
+  </div>
+  <div class="block-body">
+    
+    <p><a class="link-more" href="/posts/securinets-friendly">&#9666; back to Securinets Friendly</a></p>
+    
+    <h1>Native2</h1>
+    <ul class="chip-list" style="margin-bottom: var(--space-3)">
+      
+      <li class="chip">Android</li>
+      
+      <li class="chip">Mobile Security</li>
+      
+      <li class="chip">Native Libraries</li>
+      
+      <li class="chip">DES</li>
+      
+      <li class="chip">ROT13</li>
+      
+      <li class="chip">IDA</li>
+      
+    </ul>
+    <div class="post-body">
+      <h3><strong>Category :</strong> Mobile</h3>
+<h3><strong>𝐀𝐮𝐭𝐡𝐨𝐫 : <a href="https://github.com/Blackkader/">𝐁𝐥𝐚𝐜𝐤𝐤𝐚𝐝𝐞𝐫</a></strong></h3>
+<hr />
+<h3><strong>Files Given :</strong> <em>'Native2.apk , output.dat'</em></h3>
+<hr />
+<h3>Solution</h3>
+<p>This is the common flag-decryption challenge , we have the apk that was used to encrypt the flag , and we were handed the <strong>output.dat</strong> which contains the encrypted flag , we can know that by launching the apk : </p>
+<p><img width="399" height="469" decoding="async" alt="alt text" src="/static/img/writeups/securinets-friendly/18.png" /></p>
+<p>Now time for the <strong>MainActivity</strong> :</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MainActivity</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">AppCompatActivity</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="cm">/* renamed from: hf */</span>
+<span class="w">    </span><span class="n">heavynativeflag</span><span class="w"> </span><span class="n">f191hf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">heavynativeflag</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nd">@Override</span><span class="w"> </span><span class="c1">// androidx.fragment.app.FragmentActivity, androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, android.app.Activity</span>
+<span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onCreate</span><span class="p">(</span><span class="n">Bundle</span><span class="w"> </span><span class="n">savedInstanceState</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">.</span><span class="na">onCreate</span><span class="p">(</span><span class="n">savedInstanceState</span><span class="p">);</span>
+<span class="w">        </span><span class="n">EdgeToEdge</span><span class="p">.</span><span class="na">enable</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="w">        </span><span class="n">setContentView</span><span class="p">(</span><span class="n">C0794R</span><span class="p">.</span><span class="na">layout</span><span class="p">.</span><span class="na">activity_main</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ViewCompat</span><span class="p">.</span><span class="na">setOnApplyWindowInsetsListener</span><span class="p">(</span><span class="n">findViewById</span><span class="p">(</span><span class="n">C0794R</span><span class="p">.</span><span class="na">id</span><span class="p">.</span><span class="na">rootLayout</span><span class="p">),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OnApplyWindowInsetsListener</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// from class: io.securinets.level13.MainActivity$$ExternalSyntheticLambda0</span>
+<span class="w">            </span><span class="cm">/* JADX DEBUG: Don't trust debug lines info. Lines numbers was adjusted: min line is 0 */</span>
+<span class="w">            </span><span class="nd">@Override</span><span class="w"> </span><span class="c1">// androidx.core.view.OnApplyWindowInsetsListener</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">WindowInsetsCompat</span><span class="w"> </span><span class="nf">onApplyWindowInsets</span><span class="p">(</span><span class="n">View</span><span class="w"> </span><span class="n">view</span><span class="p">,</span><span class="w"> </span><span class="n">WindowInsetsCompat</span><span class="w"> </span><span class="n">windowInsetsCompat</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">MainActivity</span><span class="p">.</span><span class="na">lambda$onCreate$0</span><span class="p">(</span><span class="n">view</span><span class="p">,</span><span class="w"> </span><span class="n">windowInsetsCompat</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="n">AppCompatButton</span><span class="w"> </span><span class="n">encButton</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">AppCompatButton</span><span class="p">)</span><span class="w"> </span><span class="n">findViewById</span><span class="p">(</span><span class="n">C0794R</span><span class="p">.</span><span class="na">id</span><span class="p">.</span><span class="na">encButton</span><span class="p">);</span>
+<span class="w">        </span><span class="n">encButton</span><span class="p">.</span><span class="na">setOnClickListener</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">View</span><span class="p">.</span><span class="na">OnClickListener</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// from class: io.securinets.level13.MainActivity.1</span>
+<span class="w">            </span><span class="nd">@Override</span><span class="w"> </span><span class="c1">// android.view.View.OnClickListener</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onClick</span><span class="p">(</span><span class="n">View</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">TextView</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">TextView</span><span class="p">)</span><span class="w"> </span><span class="n">MainActivity</span><span class="p">.</span><span class="na">this</span><span class="p">.</span><span class="na">findViewById</span><span class="p">(</span><span class="n">C0794R</span><span class="p">.</span><span class="na">id</span><span class="p">.</span><span class="na">ciphertext</span><span class="p">);</span>
+<span class="w">                </span><span class="n">String</span><span class="w"> </span><span class="n">payloadVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">payload</span><span class="p">.</span><span class="na">getText</span><span class="p">().</span><span class="na">toString</span><span class="p">();</span>
+<span class="w">                </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">encryptedData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MainActivity</span><span class="p">.</span><span class="na">this</span><span class="p">.</span><span class="na">f191hf</span><span class="p">.</span><span class="na">magic</span><span class="p">(</span><span class="n">payloadVal</span><span class="p">);</span>
+<span class="w">                </span><span class="n">File</span><span class="w"> </span><span class="n">desktopDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Environment</span><span class="p">.</span><span class="na">getExternalStoragePublicDirectory</span><span class="p">(</span><span class="n">Environment</span><span class="p">.</span><span class="na">DIRECTORY_DOWNLOADS</span><span class="p">);</span>
+<span class="w">                </span><span class="n">File</span><span class="w"> </span><span class="n">outputFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="p">(</span><span class="n">desktopDir</span><span class="p">,</span><span class="w"> </span><span class="s">"output.dat"</span><span class="p">);</span>
+<span class="w">                </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">FileOutputStream</span><span class="w"> </span><span class="n">fos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FileOutputStream</span><span class="p">(</span><span class="n">outputFile</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">fos</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="n">encryptedData</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">Toast</span><span class="p">.</span><span class="na">makeText</span><span class="p">(</span><span class="n">MainActivity</span><span class="p">.</span><span class="na">this</span><span class="p">,</span><span class="w"> </span><span class="s">"File saved to Downloads/output.dat"</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">).</span><span class="na">show</span><span class="p">();</span>
+<span class="w">                        </span><span class="n">fos</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Log</span><span class="p">.</span><span class="na">e</span><span class="p">(</span><span class="s">"SaveFile"</span><span class="p">,</span><span class="w"> </span><span class="s">"Error writing file"</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">Toast</span><span class="p">.</span><span class="na">makeText</span><span class="p">(</span><span class="n">MainActivity</span><span class="p">.</span><span class="na">this</span><span class="p">,</span><span class="w"> </span><span class="s">"Error saving file"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">).</span><span class="na">show</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+
+<p>The activity instanciates a <strong>heavynativeflag</strong> class , then simply encrypts the <strong>ciphertext</strong> then saves it in <strong>output.dat</strong> , but again , its a native lib used here to do the encryption , so we take our .so file out and this time it shouldn't have a static flag xd , so we throw it in ida and after that we simply search for the package name ( cause native libs are usually in the same package as the apk ) "I'll just search for securinets" and we find our <strong>magic</strong> function that was used to encrypt : </p>
+<p><img width="844" height="518" loading="lazy" decoding="async" alt="alt text" src="/static/img/writeups/securinets-friendly/19.png" /></p>
+<p>Let's see what the function does :</p>
+<div class="codehilite"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="kr">__cdecl</span><span class="w"> </span><span class="n">Java_io_securinets_level13_heavynativeflag_magic</span><span class="p">(</span><span class="n">_JNIEnv</span><span class="w"> </span><span class="o">*</span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">a2</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">a3</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">v3</span><span class="p">;</span><span class="w"> </span><span class="c1">// eax</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">v4</span><span class="p">;</span><span class="w"> </span><span class="c1">// esi</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">v5</span><span class="p">;</span><span class="w"> </span><span class="c1">// eax</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">v7</span><span class="p">;</span><span class="w"> </span><span class="c1">// [esp+20h] [ebp-4Ch]</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">v8</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span><span class="w"> </span><span class="c1">// [esp+38h] [ebp-34h] BYREF</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">v9</span><span class="p">[</span><span class="mi">12</span><span class="p">];</span><span class="w"> </span><span class="c1">// [esp+4Ch] [ebp-20h] BYREF</span>
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">StringUTFChars</span><span class="p">;</span><span class="w"> </span><span class="c1">// [esp+58h] [ebp-14h]</span>
+
+<span class="w">  </span><span class="n">StringUTFChars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_JNIEnv</span><span class="o">::</span><span class="n">GetStringUTFChars</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="n">a3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">basic_string</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v9</span><span class="p">,</span><span class="w"> </span><span class="n">StringUTFChars</span><span class="p">);</span>
+<span class="w">  </span><span class="n">_JNIEnv</span><span class="o">::</span><span class="n">ReleaseStringUTFChars</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="n">a3</span><span class="p">,</span><span class="w"> </span><span class="n">StringUTFChars</span><span class="p">);</span>
+<span class="w">  </span><span class="n">encrypt_flag_bytes</span><span class="p">(</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">size</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_JNIEnv</span><span class="o">::</span><span class="n">NewByteArray</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="n">v3</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">size</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">data</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">_JNIEnv</span><span class="o">::</span><span class="n">SetByteArrayRegion</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="n">v7</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">v4</span><span class="p">,</span><span class="w"> </span><span class="n">v5</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;::~</span><span class="n">vector</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">v9</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">v7</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>ahh looks hard to read , let's rename few variables , according to program flow and what the functions do ( just search up function names and u'll find them in the c++ docs)</p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="n">inputChars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_JNIEnv</span><span class="o">::</span><span class="n">GetStringUTFChars</span><span class="p">(</span><span class="n">jniEnv</span><span class="p">,</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">basic_string</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v9</span><span class="p">,</span><span class="w"> </span><span class="n">inputChars</span><span class="p">);</span>
+<span class="w">  </span><span class="n">_JNIEnv</span><span class="o">::</span><span class="n">ReleaseStringUTFChars</span><span class="p">(</span><span class="n">jniEnv</span><span class="p">,</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">inputChars</span><span class="p">);</span>
+<span class="w">  </span><span class="n">encrypt_flag_bytes</span><span class="p">(</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">encryptedPayloadSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">size</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">ByteArray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_JNIEnv</span><span class="o">::</span><span class="n">NewByteArray</span><span class="p">(</span><span class="n">jniEnv</span><span class="p">,</span><span class="w"> </span><span class="n">encryptedPayloadSize</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">size</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">v5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;::</span><span class="n">data</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">_JNIEnv</span><span class="o">::</span><span class="n">SetByteArrayRegion</span><span class="p">(</span><span class="n">jniEnv</span><span class="p">,</span><span class="w"> </span><span class="n">ByteArray</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">v4</span><span class="p">,</span><span class="w"> </span><span class="n">v5</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;::~</span><span class="n">vector</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">v8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">v9</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">ByteArray</span><span class="p">;</span>
+</code></pre></div>
+
+<p>What interests us is the <strong>encrypt_flag_bytes</strong> function , let's find out what it does :</p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="kr">__int64</span><span class="w"> </span><span class="kr">__fastcall</span><span class="w"> </span><span class="n">encrypt_flag_bytes</span><span class="p">(</span><span class="kr">__int64</span><span class="w"> </span><span class="n">a1</span><span class="p">,</span><span class="w"> </span><span class="kr">__int64</span><span class="w"> </span><span class="n">input</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="kr">__int64</span><span class="w"> </span><span class="n">iterEnd</span><span class="p">;</span><span class="w"> </span><span class="c1">// [rsp+18h] [rbp-D8h]</span>
+<span class="w">  </span><span class="kr">__int64</span><span class="w"> </span><span class="n">iterBegin</span><span class="p">;</span><span class="w"> </span><span class="c1">// [rsp+20h] [rbp-D0h]</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">encryptedBytes</span><span class="p">[</span><span class="mi">24</span><span class="p">];</span><span class="w"> </span><span class="c1">// [rsp+28h] [rbp-C8h] BYREF</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">substr3</span><span class="p">[</span><span class="mi">24</span><span class="p">];</span><span class="w"> </span><span class="c1">// [rsp+40h] [rbp-B0h] BYREF</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">desLayer2</span><span class="p">[</span><span class="mi">24</span><span class="p">];</span><span class="w"> </span><span class="c1">// [rsp+58h] [rbp-98h] BYREF</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">substr2</span><span class="p">[</span><span class="mi">24</span><span class="p">];</span><span class="w"> </span><span class="c1">// [rsp+70h] [rbp-80h] BYREF</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">desLayer1</span><span class="p">[</span><span class="mi">28</span><span class="p">];</span><span class="w"> </span><span class="c1">// [rsp+88h] [rbp-68h] BYREF</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">substr1</span><span class="p">[</span><span class="mi">24</span><span class="p">];</span><span class="w"> </span><span class="c1">// [rsp+B0h] [rbp-40h] BYREF</span>
+<span class="w">  </span><span class="n">_BYTE</span><span class="w"> </span><span class="n">rot13String</span><span class="p">[</span><span class="mi">24</span><span class="p">];</span><span class="w"> </span><span class="c1">// [rsp+C8h] [rbp-28h] BYREF</span>
+<span class="w">  </span><span class="kr">__int64</span><span class="w"> </span><span class="n">input2</span><span class="p">;</span><span class="w"> </span><span class="c1">// [rsp+E0h] [rbp-10h]</span>
+<span class="w">  </span><span class="kr">__int64</span><span class="w"> </span><span class="n">v13</span><span class="p">;</span><span class="w"> </span><span class="c1">// [rsp+E8h] [rbp-8h]</span>
+
+<span class="w">  </span><span class="n">v13</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a1</span><span class="p">;</span>
+<span class="w">  </span><span class="n">input2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">input</span><span class="p">;</span>
+<span class="w">  </span><span class="n">rot13</span><span class="p">(</span><span class="n">rot13String</span><span class="p">,</span><span class="w"> </span><span class="n">input</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">substr</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">substr1</span><span class="p">,</span><span class="w"> </span><span class="n">input2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">resize</span><span class="p">(</span><span class="n">substr1</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">);</span>
+<span class="w">  </span><span class="n">des_encrypt</span><span class="p">(</span><span class="n">desLayer1</span><span class="p">,</span><span class="w"> </span><span class="n">rot13String</span><span class="p">,</span><span class="w"> </span><span class="n">substr1</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">substr</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">substr2</span><span class="p">,</span><span class="w"> </span><span class="n">input2</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">resize</span><span class="p">(</span><span class="n">substr2</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">);</span>
+<span class="w">  </span><span class="n">des_encrypt</span><span class="p">(</span><span class="n">desLayer2</span><span class="p">,</span><span class="w"> </span><span class="n">desLayer1</span><span class="p">,</span><span class="w"> </span><span class="n">substr2</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">substr</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">substr3</span><span class="p">,</span><span class="w"> </span><span class="n">input2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">resize</span><span class="p">(</span><span class="n">substr3</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">);</span>
+<span class="w">  </span><span class="n">des_encrypt</span><span class="p">(</span><span class="n">encryptedBytes</span><span class="p">,</span><span class="w"> </span><span class="n">desLayer2</span><span class="p">,</span><span class="w"> </span><span class="n">substr3</span><span class="p">);</span>
+<span class="w">  </span><span class="n">iterBegin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">begin</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">]();</span>
+<span class="w">  </span><span class="n">iterEnd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">end</span><span class="p">[</span><span class="n">abi</span><span class="o">:</span><span class="n">ne180000</span><span class="p">](</span><span class="n">encryptedBytes</span><span class="p">);</span>
+<span class="w">  </span><span class="n">_ZNSt6__ndk16vectorIhNS_9allocatorIhEEEC2INS_11__wrap_iterIPcEETnNS_9enable_ifIXaasr31__has_forward_iterator_categoryIT_EE5valuesr16is_constructibleIhNS_15iterator_traitsIS9_E9referenceEEE5valueEiE4typeELi0EEES9_S9_</span><span class="p">(</span>
+<span class="w">    </span><span class="n">a1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">iterBegin</span><span class="p">,</span>
+<span class="w">    </span><span class="n">iterEnd</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">encryptedBytes</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">substr3</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">desLayer2</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">substr2</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">desLayer1</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">substr1</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">(</span><span class="n">rot13String</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">a1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>This function basically takes a string, obfuscates it with ROT13, then runs three successive DES encryptions on different slices of the string, and finally packs the encrypted result into a byte vector to return.</p>
+<div class="codehilite"><pre><span></span><code>
+</code></pre></div>
+
+<p>That part is just taking the processed/encrypted bytes (between beginIter and endIter) and stuffing them into the output vector so they can be returned to the caller that's why we can ignore it lol , so now we have our flow we just need to write our solver which will do the decryption process and it starts with 3 des_decrypt then rot13 , here is the flow :</p>
+<p>Encrypted bytes (outputVector from encrypt_flag_bytes)</p>
+<p>→ DES decrypt using key3(substr3 = input[2:6], padded to 8 bytes with 'X')</p>
+<p>→ DES decrypt using key2 (substr2 = input[6:10], padded to 8 bytes with 'X')</p>
+<p>→ DES decrypt using key1 (substr1 = input[0:8], padded to 8 bytes with 'X')</p>
+<p>→ Recombine decrypted layers to reconstruct ROT13 version of original input
+→ Apply ROT13 to recover the original plaintext ciphertext/flag</p>
+<p>NOTEE : as we know the flag format is "Securinets{flag}", the substrs (keys) are already known : 
+- key1 = "Securine"
+- key2 = "nets"
+- key3 = "curi"</p>
+<p>We have all we need to craft our solver  :</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">Crypto.Cipher</span><span class="w"> </span><span class="kn">import</span> <span class="n">DES</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rot13</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'a'</span> <span class="o">&lt;=</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="s1">'z'</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">'a'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">'a'</span><span class="p">)))</span>
+        <span class="k">elif</span> <span class="s1">'A'</span> <span class="o">&lt;=</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="s1">'Z'</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">'A'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span> <span class="o">%</span> <span class="mi">26</span> <span class="o">+</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">'A'</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">des_decrypt</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="sa">b</span><span class="s1">'X'</span><span class="p">)[:</span><span class="mi">8</span><span class="p">]</span>
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">DES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">DES</span><span class="o">.</span><span class="n">MODE_ECB</span><span class="p">)</span>
+    <span class="n">decrypted</span> <span class="o">=</span> <span class="n">cipher</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">ciphertext</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">decrypted</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="sa">b</span><span class="s1">'</span><span class="se">\0</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">decrypt_flag_bytes</span><span class="p">(</span><span class="n">encrypted_bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">key3</span> <span class="o">=</span> <span class="s2">"Securinets</span><span class="si">{test}</span><span class="s2">"</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+    <span class="n">layer3</span> <span class="o">=</span> <span class="n">des_decrypt</span><span class="p">(</span><span class="n">encrypted_bytes</span><span class="p">,</span> <span class="n">key3</span><span class="p">)</span>
+    <span class="n">key2</span> <span class="o">=</span> <span class="s2">"Securinets</span><span class="si">{test}</span><span class="s2">"</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+    <span class="n">layer2</span> <span class="o">=</span> <span class="n">des_decrypt</span><span class="p">(</span><span class="n">layer3</span><span class="p">,</span> <span class="n">key2</span><span class="p">)</span>
+    <span class="n">key1</span> <span class="o">=</span> <span class="s2">"Securinets</span><span class="si">{test}</span><span class="s2">"</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+    <span class="n">layer1_bytes</span> <span class="o">=</span> <span class="n">des_decrypt</span><span class="p">(</span><span class="n">layer2</span><span class="p">,</span> <span class="n">key1</span><span class="p">)</span>
+    <span class="n">layer1_str</span> <span class="o">=</span> <span class="n">layer1_bytes</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rot13</span><span class="p">(</span><span class="n">layer1_str</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"output.dat"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">encrypted</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">decrypted</span> <span class="o">=</span> <span class="n">decrypt_flag_bytes</span><span class="p">(</span><span class="n">encrypted</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Decrypted: </span><span class="si">{</span><span class="n">decrypted</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Result :</p>
+<div class="codehilite"><pre><span></span><code>Decrypted: Securinets{n4T1v3_L1bS_h4V3_L0T5_0f_53cR3t5!!}
+</code></pre></div>
+    </div>
+  </div>
+</article>
+<div class="edge" aria-hidden="true"></div>
+
+  </main>
+  <footer class="graph">
+  <div class="block block-end">
+    <div class="block-head"><span class="addr">.text:00401F00</span><span class="sym">sub_farewell</span><span class="flag">noreturn</span></div>
+    <div class="block-body">
+      <span class="retn">retn</span> &nbsp;; Adem Kefi (blackkader)
+    </div>
+  </div>
+  
+  <nav class="social-row" aria-label="Contact and social links">
+    
+  <a class="social-icon" href="https://www.linkedin.com/in/kefi-adem-62019a241/" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: #0A66C2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="https://github.com/Blackkader" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--head);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+  </a>
+
+  
+  <a class="social-icon" href="https://discord.com/users/376381309817192448" target="_blank" rel="noopener" aria-label="Discord" style="color: #5865F2;">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+  </a>
+  
+
+  <a class="social-icon" href="mailto:adem.kefi@insat.ucar.tn" aria-label="Email" style="color: var(--label);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+  </nav>
+</footer>
+  <div class="statusbar" aria-hidden="true">
+    <span class="st-idle">&#9679; AU: idle</span>
+    <span class="st-hide">Down</span>
+    <span class="st-hide" data-xref-toggle>X: show clickables</span>
+    <span class="st-hide">Disk: 42GB</span>
+    <span class="st-right">
+      <span class="st-addr" data-st-addr>.text:00401000</span>
+      <span class="st-sym" data-st-sym>start</span>
+    </span>
+  </div>
+  <script type="application/json" id="site-index">[{"k": "ctf", "t": "Securinets CTF Quals", "u": "/posts/securinets-quals-2026"}, {"c": "Securinets CTF Quals", "k": "writeup", "t": "Revenant", "u": "/posts/securinets-quals-2026/revenant"}, {"c": "Securinets CTF Quals", "k": "writeup", "t": "Letmethink", "u": "/posts/securinets-quals-2026/letmethink"}, {"k": "ctf", "t": "DarkestHour", "u": "/posts/darkesthour"}, {"c": "DarkestHour", "k": "writeup", "t": "Obfer", "u": "/posts/darkesthour/obfer"}, {"k": "ctf", "t": "Summerrush", "u": "/posts/summerrush"}, {"c": "Summerrush", "k": "writeup", "t": "Adventure Time", "u": "/posts/summerrush/adventuretime"}, {"c": "Summerrush", "k": "writeup", "t": "Hoogments", "u": "/posts/summerrush/hoogments"}, {"c": "Summerrush", "k": "writeup", "t": "Pyshell", "u": "/posts/summerrush/pyshell"}, {"k": "ctf", "t": "Securinets Friendly", "u": "/posts/securinets-friendly"}, {"c": "Securinets Friendly", "k": "writeup", "t": "DynamicIntro", "u": "/posts/securinets-friendly/dynamic-intro"}, {"c": "Securinets Friendly", "k": "writeup", "t": "ExportedActivity", "u": "/posts/securinets-friendly/exported-activity"}, {"c": "Securinets Friendly", "k": "writeup", "t": "IntentHandler", "u": "/posts/securinets-friendly/intent-handler"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Irreversible", "u": "/posts/securinets-friendly/irreversible"}, {"c": "Securinets Friendly", "k": "writeup", "t": "LoginMaster", "u": "/posts/securinets-friendly/login-master"}, {"c": "Securinets Friendly", "k": "writeup", "t": "LoginMaster2", "u": "/posts/securinets-friendly/login-master-2"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Meoww", "u": "/posts/securinets-friendly/meoww"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Native1", "u": "/posts/securinets-friendly/native-1"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Native2", "u": "/posts/securinets-friendly/native-2"}, {"c": "Securinets Friendly", "k": "writeup", "t": "RollTheDice", "u": "/posts/securinets-friendly/roll-the-dice"}, {"c": "Securinets Friendly", "k": "writeup", "t": "SecretDigger", "u": "/posts/securinets-friendly/secret-digger"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Tricky", "u": "/posts/securinets-friendly/tricky"}, {"c": "Securinets Friendly", "k": "writeup", "t": "UnexportedActivity", "u": "/posts/securinets-friendly/unexported-activity"}, {"c": "Securinets Friendly", "k": "writeup", "t": "Welcome", "u": "/posts/securinets-friendly/welcome"}, {"k": "ctf", "t": "FL1TZ x Securinets Mini-CTF", "u": "/posts/fl1tz-x-securinets-mini-ctf"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Anderouid", "u": "/posts/fl1tz-x-securinets-mini-ctf/anderouid"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Hexer", "u": "/posts/fl1tz-x-securinets-mini-ctf/hexer"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Magic", "u": "/posts/fl1tz-x-securinets-mini-ctf/magic"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Maze1", "u": "/posts/fl1tz-x-securinets-mini-ctf/maze1"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Maze2", "u": "/posts/fl1tz-x-securinets-mini-ctf/maze2"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Naggez", "u": "/posts/fl1tz-x-securinets-mini-ctf/naggez"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Oid", "u": "/posts/fl1tz-x-securinets-mini-ctf/oid"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Serialo", "u": "/posts/fl1tz-x-securinets-mini-ctf/serialo"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "Stringz", "u": "/posts/fl1tz-x-securinets-mini-ctf/stringz"}, {"c": "FL1TZ x Securinets Mini-CTF", "k": "writeup", "t": "X0r", "u": "/posts/fl1tz-x-securinets-mini-ctf/x0r"}]</script>
+  
+  <script src="/static/js/main.js?v=1793310743" defer></script>
+  <script src="/static/js/nav.js?v=1793310743" defer></script>
+  <script src="/static/js/lightbox.js?v=1793310743" defer></script>
+  <script src="/static/js/minimap.js?v=1793310743" defer></script>
+  <script src="/static/js/palette.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient_e33.js?v=1793310743" defer></script>
+  <script src="/static/js/ambient_re.js?v=1793310743" defer></script>
+  <script src="/static/js/cursor.js?v=1793310743" defer></script>
+</body>
+</html>
