@@ -1,0 +1,167 @@
+/* ==========================================================================
+   Dark Souls: cold stone, bone, and one bonfire.
+   An homage in the atmosphere of a ruined, ash-covered kingdom. Everything is drawn from scratch: no logos,
+   artwork or fonts from the games. The rule of the palette is that the grey stone and bone-white text carry the
+   page, and bonfire orange is used ONLY for what is lit: links, the active tab, the box you point at, the cursor.
+   Loaded after themes_re.css; every rule is scoped to data-theme="souls".
+   ========================================================================== */
+
+:root[data-theme="souls"] {
+  --bg: #0e1012;
+  --node: #15181b;
+  --node-border: #4b5056;
+  --line: #262a2f;
+  --text: #cbc7b8;
+  --muted: #868a8e;
+  --head: #ece7d8;
+  --addr: #7e848a;
+  --label: #d6d0be;            /* bone: names, labels, titles */
+  --blue: #e8742c;             /* links are lit, so they take the flame */
+  --green: #8e9a8a;
+  --red: #b9482b;
+  --yellow: #b99d62;
+  --purple: #8c82a0;
+  --bar: #0b0d0f;
+  --code-bg: #0b0d0f;
+  --hover: #e8742c;            /* the box you point at lights up */
+
+  --flame: #e8742c;
+  --flame-2: #f3b04c;
+  --bone: #d6d0be;
+  --stone: #4b5056;
+  --branch-a: #d6d0be;         /* the fork: bone and steel, not traffic-light colours */
+  --branch-b: #7f8a96;
+
+  --font-mono: "DS Digits", "IM Fell English", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-head: "DS Digits", "Cinzel", "IM Fell English", Georgia, serif;
+  color-scheme: dark;
+}
+
+:root[data-theme="souls"] body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% -8%, rgba(120, 132, 144, 0.13), transparent 70%),
+    radial-gradient(ellipse 90% 40% at 50% 112%, rgba(0, 0, 0, 0.55), transparent 70%);
+  background-attachment: fixed;
+  font-size: 1.04rem;
+  line-height: 1.7;
+  letter-spacing: 0.005em;
+}
+:root[data-theme="souls"] ::selection { background: rgba(232, 116, 44, 0.38); color: #fff4e4; }
+
+/* no italics anywhere in this theme */
+:root[data-theme="souls"] *, :root[data-theme="souls"] *::before, :root[data-theme="souls"] *::after { font-style: normal !important; }
+
+/* ---------- Type: carved capitals for headings, an old printed serif for the text ---------- */
+:root[data-theme="souls"] :is(h1, h2, h3, h4, .hero-name) {
+  font-family: var(--font-head);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--head);
+}
+:root[data-theme="souls"] .hero-name { font-weight: 700; letter-spacing: 0.05em; text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7); }
+:root[data-theme="souls"] h1 { font-size: 1.9rem; }
+:root[data-theme="souls"] :is(h3, h4) { font-size: 0.98rem; letter-spacing: 0.09em; }
+:root[data-theme="souls"] .hero-kicker { }
+:root[data-theme="souls"] .hero-handle { color: var(--bone); }
+:root[data-theme="souls"] .hero-role { color: var(--yellow); }
+:root[data-theme="souls"] .hero-tagline { border-left-color: var(--stone); }
+
+/* ---------- The tab bar: a rail of carved labels; the active page has a lit orange underline ---------- */
+:root[data-theme="souls"] .tabbar { background: var(--bar); border-bottom: 1px solid var(--stone); }
+:root[data-theme="souls"] .tabbar-brand { font-family: var(--font-head); letter-spacing: 0.1em; color: var(--bone); font-weight: 600; text-transform: lowercase; }
+:root[data-theme="souls"] .tab {
+  position: relative;
+  font-family: var(--font-head);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+:root[data-theme="souls"] .tab:hover { color: var(--bone); }
+:root[data-theme="souls"] .tab.active { color: var(--head); background: var(--node); border-bottom-color: var(--flame); }
+:root[data-theme="souls"] :is(.theme-toggle, .cursor-toggle, .motion-toggle) { font-family: var(--font-head); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: lowercase; }
+:root[data-theme="souls"] :is(.theme-toggle, .cursor-toggle, .motion-toggle):hover { color: var(--bone); }
+
+/* ---------- The boxes: item-description windows ---------- */
+:root[data-theme="souls"] .block {
+  position: relative;
+  --b: var(--bone);
+  background: linear-gradient(180deg, rgba(25, 28, 32, 0.94), rgba(17, 20, 23, 0.94));
+  border: 1px solid var(--stone);
+  box-shadow: inset 0 0 0 3px #15181b, inset 0 0 0 4px rgba(214, 208, 190, 0.1), 0 12px 34px rgba(0, 0, 0, 0.5);
+  transition: border-color 220ms ease, box-shadow 220ms ease;
+}
+:root[data-theme="souls"] .block:hover { --b: var(--flame); border-color: rgba(232, 116, 44, 0.75); }
+:root[data-theme="souls"] .block::before {                    /* the notched corners: four small brackets that overshoot the border */
+  content: "";
+  position: absolute;
+  inset: -4px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--b), var(--b)) 0 0 / 11px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) 0 0 / 1px 11px no-repeat,
+    linear-gradient(var(--b), var(--b)) 100% 0 / 11px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) 100% 0 / 1px 11px no-repeat,
+    linear-gradient(var(--b), var(--b)) 0 100% / 11px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) 0 100% / 1px 11px no-repeat,
+    linear-gradient(var(--b), var(--b)) 100% 100% / 11px 1px no-repeat,
+    linear-gradient(var(--b), var(--b)) 100% 100% / 1px 11px no-repeat;
+  opacity: 0.85;
+  transition: opacity 220ms ease;
+}
+:root[data-theme="souls"] .block-head { border-bottom: 1px solid var(--line); padding-top: 0.7rem; padding-bottom: 0.7rem; }
+:root[data-theme="souls"] .block-head .addr { color: var(--addr); font-size: 0.72rem; }
+:root[data-theme="souls"] .block-head .flag { color: var(--muted); font-size: 0.72rem; }
+:root[data-theme="souls"] .block-head .sym {
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+:root[data-theme="souls"] .block-head .sym::after { content: ""; }
+:root[data-theme="souls"] .block-head .sym::before { content: "\25C6\00A0\00A0"; color: var(--stone); font-size: 0.55rem; vertical-align: 0.15em; }
+:root[data-theme="souls"] .comment { color: var(--addr); }
+
+/* ---------- Links are lit; everything else stays stone and bone ---------- */
+:root[data-theme="souls"] a { color: var(--flame); }
+:root[data-theme="souls"] a:hover { color: var(--flame-2); }
+/* no underlines in this theme: hovering shows by colour and by the lit border only */
+:root[data-theme="souls"] :is(a, a:hover, a:focus-visible, a *, .post-card, .post-card *, .link-more) { text-decoration: none !important; }
+:root[data-theme="souls"] .tab, :root[data-theme="souls"] .tabbar-brand { color: inherit; }
+:root[data-theme="souls"] .tab { color: var(--muted); }
+:root[data-theme="souls"] .tab.active { color: var(--head); }
+:root[data-theme="souls"] .tabbar-brand { color: var(--bone); }
+:root[data-theme="souls"] .social-icon { color: var(--bone); }
+:root[data-theme="souls"] .social-icon:hover { color: var(--flame); }
+:root[data-theme="souls"] .link-more { color: var(--flame); }
+:root[data-theme="souls"] .post-card, :root[data-theme="souls"] .chip { border-color: var(--line); }
+:root[data-theme="souls"] .post-card:hover { border-color: rgba(232, 116, 44, 0.7); }
+:root[data-theme="souls"] .chip { color: var(--bone); background: rgba(214, 208, 190, 0.04); }
+:root[data-theme="souls"] .portrait { border-color: var(--stone); padding: 4px; background: #101215; box-shadow: 0 0 0 1px rgba(214, 208, 190, 0.1) inset; }
+:root[data-theme="souls"] .timeline-role, :root[data-theme="souls"] .catalogue-role { color: var(--yellow); }
+:root[data-theme="souls"] .statusbar { background: var(--bar); border-top: 1px solid var(--stone); color: var(--addr); }
+:root[data-theme="souls"] .statusbar .st-sym, :root[data-theme="souls"] .statusbar .st-addr { color: var(--bone); }
+:root[data-theme="souls"] .writeup-author { font-family: var(--font-head); letter-spacing: 0.08em; }
+
+/* connectors: pale stone lines, not coloured wires */
+:root[data-theme="souls"] .edge { --c: #7e848a; }
+
+/* code and screenshots in writeups sit in the same smoke as the windows */
+:root[data-theme="souls"] .post-body pre { background: var(--code-bg); border: 1px solid var(--line); }
+:root[data-theme="souls"] .post-body img { border-color: var(--stone); background: var(--code-bg); }
+
+/* scrollbars: thin, stone */
+:root[data-theme="souls"] { scrollbar-color: #3a3f45 #0b0d0f; scrollbar-width: thin; }
+
+/* ---------- The not-found page: a lost path ---------- */
+.ds-lost { display: none; }
+:root[data-theme="souls"] .std-404 { display: none; }
+:root[data-theme="souls"] .ds-lost { display: block; }
+:root[data-theme="souls"] h1.ds-lost { font-size: 1.7rem; letter-spacing: 0.22em; text-transform: uppercase; text-align: center; margin: 2.2rem 0 1.2rem; color: var(--head); text-shadow: 0 0 22px rgba(232, 116, 44, 0.28); }
+:root[data-theme="souls"] p.ds-lost { text-align: center; margin-bottom: 1.6rem; }
+
+/* the return pill is a lit thing: it takes the flame */
+:root[data-theme="souls"] .return-pill { color: var(--flame); font-family: var(--font-head); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: lowercase; }
+:root[data-theme="souls"] .return-pill:hover { color: var(--flame-2); }
